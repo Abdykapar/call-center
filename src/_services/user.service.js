@@ -11,19 +11,20 @@ export const userService = {
     delete: _delete
 };
 
-function login(username, password) {
+function login (username, password) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
     };
-    console.log("click");
+    console.log('click');
     return fetch(`${config.apiUrl}/auth/login`, requestOptions)
         .then(handleResponse)
         .then(user => {
             // login successful if there's a jwt token in the response
             console.log(user);
             if (user.token) {
+                window.location.href = '/';
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
             }
@@ -32,12 +33,12 @@ function login(username, password) {
         });
 }
 
-function logout() {
+function logout () {
     // remove user from local storage to log user out
     localStorage.removeItem('user');
 }
 
-function register(user) {
+function register (user) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -47,7 +48,7 @@ function register(user) {
     return fetch(`${config.apiUrl}/users/register`, requestOptions).then(handleResponse);
 }
 
-function getAll() {
+function getAll () {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
@@ -57,7 +58,7 @@ function getAll() {
 }
 
 
-function getById(id) {
+function getById (id) {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
@@ -66,7 +67,7 @@ function getById(id) {
     return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse);
 }
 
-function update(user) {
+function update (user) {
     const requestOptions = {
         method: 'PUT',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
@@ -77,7 +78,7 @@ function update(user) {
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id) {
+function _delete (id) {
     const requestOptions = {
         method: 'DELETE',
         headers: authHeader()
@@ -86,7 +87,7 @@ function _delete(id) {
     return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse);
 }
 
-function handleResponse(response) {
+function handleResponse (response) {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
         if (!response.ok) {

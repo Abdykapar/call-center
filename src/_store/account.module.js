@@ -7,7 +7,7 @@ const state = user
     : { status: {}, user: null };
 
 const actions = {
-    login({ dispatch, commit }, { username, password }) {
+    login ({ dispatch, commit }, { username, password }) {
         commit('loginRequest', { username });
     
         userService.login(username, password)
@@ -22,11 +22,11 @@ const actions = {
                 }
             );
     },
-    logout({ commit }) {
+    logout ({ commit }) {
         userService.logout();
         commit('logout');
     },
-    register({ dispatch, commit }, user) {
+    register ({ dispatch, commit }, user) {
         commit('registerRequest', user);
     
         userService.register(user)
@@ -37,7 +37,7 @@ const actions = {
                     setTimeout(() => {
                         // display success message after route change completes
                         dispatch('alert/success', 'Registration successful', { root: true });
-                    })
+                    });
                 },
                 error => {
                     commit('registerFailure', error);
@@ -48,29 +48,29 @@ const actions = {
 };
 
 const mutations = {
-    loginRequest(state, user) {
+    loginRequest (state, user) {
         state.status = { loggingIn: true };
         state.user = user;
     },
-    loginSuccess(state, user) {
+    loginSuccess (state, user) {
         state.status = { loggedIn: true };
         state.user = user;
     },
-    loginFailure(state) {
+    loginFailure (state) {
         state.status = {};
         state.user = null;
     },
-    logout(state) {
+    logout (state) {
         state.status = {};
         state.user = null;
     },
-    registerRequest(state, user) {
+    registerRequest (state, user) {
         state.status = { registering: true };
     },
-    registerSuccess(state, user) {
+    registerSuccess (state, user) {
         state.status = {};
     },
-    registerFailure(state, error) {
+    registerFailure (state, error) {
         state.status = {};
     }
 };

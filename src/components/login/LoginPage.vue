@@ -1,72 +1,154 @@
 <template>
-    <div class="page-content--bge5">
-            <div class="container">
-                <div class="login-wrap">
-                    <div class="login-content">
-                        <div class="login-logo">
-                            <a href="#">
-                                <img src="/static/images/icon/logo.png" alt="CoolAdmin">
-                            </a>
-                        </div>
-                        <div class="login-form">
-                            <form @submit.prevent="handleSubmit">
-                                <div class="form-group">
-                                    <label for="username">Username</label>
-                                    <input type="text" v-model="username" name="username" class="au-input au-input--full" :class="{ 'is-invalid': submitted && !username }" />
-                                    <div v-show="submitted && !username" class="invalid-feedback">Username is required</div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Password</label>
-                                    <input type="password" v-model="password" name="password" class="au-input au-input--full" :class="{ 'is-invalid': submitted && !password }" />
-                                    <div v-show="submitted && !password" class="invalid-feedback">Password is required</div>
-                                    
-                                </div>
-                                <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">sign in</button>
-                                <div class="login-checkbox">
-                                    <label>
-                                        <input type="checkbox" name="remember">Remember Me
-                                    </label>
-                                    <label>
-                                        <a href="#">Forgotten Password?</a>
-                                    </label>
-                                </div>
-                               
-                            </form>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="call-center-container">
+    <div class="login-form">
+      <div class="call-center-logo">
+        <img src="/static/images/login/Mobile@3x.png">
+      </div>
+      <div class="call-center-form">
+        <form @submit.prevent="handleSubmit">
+          <input
+            v-model="username"
+            type="text"
+            placeholder="Email"
+          >
+          <input
+            v-model="password"
+            type="password"
+            placeholder="Пароль"
+          >
+          <button type="submit">
+            Войти
+          </button>
+          <div class="save-account">
+            <input
+              class="call-center-check"
+              type="checkbox"
+              checked
+            >Запомнит
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="call-center-image">
+      <img src="/static/images/login/undraw_calling_kpbp@2x.png">
+    </div>
+  </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
-
+import { mapActions, mapState } from 'vuex';
 export default {
-    data () {
+    name: 'CallCenterLogin',
+    data (){
         return {
             username: '',
             password: '',
-            submitted: false
-        }
+            submitted: false,
+        };
     },
-    computed: {
-        ...mapState('account', ['status'])
+    computed:{
+        ...mapState('account', [ 'status' ])
     },
-    created () {
-        // reset login status
+    created (){
         this.logout();
     },
     methods: {
-        ...mapActions('account', ['login', 'logout']),
+        ...mapActions('account', [ 'login','logout' ]),
         handleSubmit (e) {
             this.submitted = true;
             const { username, password } = this;
             if (username && password) {
-                this.login({ username, password })
+                this.login({ username, password });
             }
         }
     }
 };
 </script>
+
+<style lang="scss" scoped>
+    .call-center-container{
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        background-color: #f3f3f3;
+    }
+    .call-center-image{
+        height: 60vh;
+        width: 50%;
+        margin: auto;
+        img{
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+    .login-form{
+        padding: 30px 0 60px 0;
+        height: 60vh;
+        width: 40%;
+        margin: auto;
+        display: flex;
+        flex-flow: column;
+        .call-center-logo{
+            margin: 0 auto 74px auto;
+            img{
+                width: 83px;
+                height: 93px;
+            }
+        }
+        .call-center-form{
+            display: flex;
+            flex-flow: column;
+            margin: 0 auto;
+            width: 80%;
+            form{
+                input{
+                    width: 100%;
+                    height: 47px;
+                    border-radius: 25px;
+                    background-color: #ffffff;
+                    padding-left: 30px;
+                    margin-bottom: 20px;
+                    font-size: 18px;
+                }
+                input::-webkit-input-placeholder{
+                    color: #707070;
+                    opacity: 0.4;
+                }
+                button{
+                    width: 100%;
+                    height: 47px;
+                    border-radius: 25px;
+                    background-color: #ee7739;
+                    font-size: 18px;
+                    font-weight: bold;
+                    font-style: normal;
+                    font-stretch: normal;
+                    letter-spacing: normal;
+                    color: #ffffff;
+                }
+                input[type=checkbox]{
+                    height: initial;
+                    width: initial;
+                    margin-right: 5px;
+                    border-radius: 15px;
+                    background-color: #ffffff;
+                }
+            }
+        }
+        .save-account{
+            /*display: flex;*/
+            width: 25%;
+            float: right;
+            margin-top: 20px;
+            font-family: Helvetica;
+            font-size: 12px;
+            font-weight: normal;
+            font-style: normal;
+            font-stretch: normal;
+            letter-spacing: normal;
+            text-align: left;
+            color: rgba(#707070,0.4);
+        }
+    }
+</style>

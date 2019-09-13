@@ -1,334 +1,138 @@
 <template>
-  <div>
-    <sidebar />
-    <div class="page-container">
-      <!-- HEADER DESKTOP-->
-      <header class="header-desktop">
-        <div class="section__content section__content--p30">
-          <div class="container-fluid">
-            <div class="header-wrap">
-              <form class="form-header" action method="POST">
-                <input
-                  class="au-input au-input--xl"
-                  type="text"
-                  name="search"
-                  placeholder="Search for datas &amp; reports..."
-                />
-                <button class="au-btn--submit" type="submit">
-                  <i class="zmdi zmdi-search"></i>
-                </button>
-              </form>
-              <div class="header-button">
-                <div class="noti-wrap">
-                  <div class="noti__item js-item-menu">
-                    <i class="zmdi zmdi-comment-more"></i>
-                    <span class="quantity">1</span>
-                    <div class="mess-dropdown js-dropdown">
-                      <div class="mess__title">
-                        <p>You have 2 news message</p>
-                      </div>
-                      <div class="mess__item">
-                        <div class="image img-cir img-40">
-                          <img src="/static/images/icon/avatar-06.jpg" alt="Michelle Moreno" />
-                        </div>
-                        <div class="content">
-                          <h6>Michelle Moreno</h6>
-                          <p>Have sent a photo</p>
-                          <span class="time">3 min ago</span>
-                        </div>
-                      </div>
-                      <div class="mess__item">
-                        <div class="image img-cir img-40">
-                          <img src="/static/images/icon/avatar-04.jpg" alt="Diane Myers" />
-                        </div>
-                        <div class="content">
-                          <h6>Diane Myers</h6>
-                          <p>You are now connected on message</p>
-                          <span class="time">Yesterday</span>
-                        </div>
-                      </div>
-                      <div class="mess__footer">
-                        <a href="#">View all messages</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="noti__item js-item-menu">
-                    <i class="zmdi zmdi-email"></i>
-                    <span class="quantity">1</span>
-                    <div class="email-dropdown js-dropdown">
-                      <div class="email__title">
-                        <p>You have 3 New Emails</p>
-                      </div>
-                      <div class="email__item">
-                        <div class="image img-cir img-40">
-                          <img src="/static/images/icon/avatar-06.jpg" alt="Cynthia Harvey" />
-                        </div>
-                        <div class="content">
-                          <p>Meeting about new dashboard...</p>
-                          <span>Cynthia Harvey, 3 min ago</span>
-                        </div>
-                      </div>
-                      <div class="email__item">
-                        <div class="image img-cir img-40">
-                          <img src="/static/images/icon/avatar-05.jpg" alt="Cynthia Harvey" />
-                        </div>
-                        <div class="content">
-                          <p>Meeting about new dashboard...</p>
-                          <span>Cynthia Harvey, Yesterday</span>
-                        </div>
-                      </div>
-                      <div class="email__item">
-                        <div class="image img-cir img-40">
-                          <img src="/static/images/icon/avatar-04.jpg" alt="Cynthia Harvey" />
-                        </div>
-                        <div class="content">
-                          <p>Meeting about new dashboard...</p>
-                          <span>Cynthia Harvey, April 12,,2018</span>
-                        </div>
-                      </div>
-                      <div class="email__footer">
-                        <a href="#">See all emails</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="noti__item js-item-menu">
-                    <i class="zmdi zmdi-notifications"></i>
-                    <span class="quantity">3</span>
-                    <div class="notifi-dropdown js-dropdown">
-                      <div class="notifi__title">
-                        <p>You have 3 Notifications</p>
-                      </div>
-                      <div class="notifi__item">
-                        <div class="bg-c1 img-cir img-40">
-                          <i class="zmdi zmdi-email-open"></i>
-                        </div>
-                        <div class="content">
-                          <p>You got a email notification</p>
-                          <span class="date">April 12, 2018 06:50</span>
-                        </div>
-                      </div>
-                      <div class="notifi__item">
-                        <div class="bg-c2 img-cir img-40">
-                          <i class="zmdi zmdi-account-box"></i>
-                        </div>
-                        <div class="content">
-                          <p>Your account has been blocked</p>
-                          <span class="date">April 12, 2018 06:50</span>
-                        </div>
-                      </div>
-                      <div class="notifi__item">
-                        <div class="bg-c3 img-cir img-40">
-                          <i class="zmdi zmdi-file-text"></i>
-                        </div>
-                        <div class="content">
-                          <p>You got a new file</p>
-                          <span class="date">April 12, 2018 06:50</span>
-                        </div>
-                      </div>
-                      <div class="notifi__footer">
-                        <a href="#">All notifications</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="account-wrap">
-                  <div class="account-item clearfix js-item-menu">
-                    <div class="image">
-                      <img src="/static/images/icon/avatar-01.jpg" alt="John Doe" />
-                    </div>
-                    <div class="content">
-                      <a class="js-acc-btn" href="#">john doe</a>
-                    </div>
-                    <div class="account-dropdown js-dropdown">
-                      <div class="info clearfix">
-                        <div class="image">
-                          <a href="#">
-                            <img src="/static/images/icon/avatar-01.jpg" alt="John Doe" />
-                          </a>
-                        </div>
-                        <div class="content">
-                          <h5 class="name">
-                            <a href="#">john doe</a>
-                          </h5>
-                          <span class="email">johndoe@example.com</span>
-                        </div>
-                      </div>
-                      <div class="account-dropdown__body">
-                        <div class="account-dropdown__item">
-                          <a href="#">
-                            <i class="zmdi zmdi-account"></i>Account
-                          </a>
-                        </div>
-                        <div class="account-dropdown__item">
-                          <a href="#">
-                            <i class="zmdi zmdi-settings"></i>Setting
-                          </a>
-                        </div>
-                        <div class="account-dropdown__item">
-                          <a href="#">
-                            <i class="zmdi zmdi-money-box"></i>Billing
-                          </a>
-                        </div>
-                      </div>
-                      <div class="account-dropdown__footer">
-                        <a href="#">
-                          <i class="zmdi zmdi-power"></i>Logout
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-      <!-- HEADER DESKTOP-->
-      <!-- MAIN CONTENT-->
-      <div class="main-content">
-        <div class="section__content section__content--p30">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="overview-wrap">
-                  <h2 class="title-1">overview</h2>
-                  <button class="au-btn au-btn-icon au-btn--blue">
-                    <i class="zmdi zmdi-plus"></i>add item
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="row m-t-25">
-              <div class="col-sm-6 col-lg-3">
-                <div class="overview-item overview-item--c1">
-                  <div class="overview__inner">
-                    <div class="overview-box clearfix">
-                      <div class="icon">
-                        <i class="zmdi zmdi-account-o"></i>
-                      </div>
-                      <div class="text">
-                        <h2>10368</h2>
-                        <span>members online</span>
-                      </div>
-                    </div>
-                    <div class="overview-chart">
-                      <canvas id="widgetChart1"></canvas>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 col-lg-3">
-                <div class="overview-item overview-item--c2">
-                  <div class="overview__inner">
-                    <div class="overview-box clearfix">
-                      <div class="icon">
-                        <i class="zmdi zmdi-shopping-cart"></i>
-                      </div>
-                      <div class="text">
-                        <h2>388,688</h2>
-                        <span>items solid</span>
-                      </div>
-                    </div>
-                    <div class="overview-chart">
-                      <canvas id="widgetChart2"></canvas>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 col-lg-3">
-                <div class="overview-item overview-item--c3">
-                  <div class="overview__inner">
-                    <div class="overview-box clearfix">
-                      <div class="icon">
-                        <i class="zmdi zmdi-calendar-note"></i>
-                      </div>
-                      <div class="text">
-                        <h2>1,086</h2>
-                        <span>this week</span>
-                      </div>
-                    </div>
-                    <div class="overview-chart">
-                      <canvas id="widgetChart3"></canvas>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 col-lg-3">
-                <div class="overview-item overview-item--c4">
-                  <div class="overview__inner">
-                    <div class="overview-box clearfix">
-                      <div class="icon">
-                        <i class="zmdi zmdi-money"></i>
-                      </div>
-                      <div class="text">
-                        <h2>$1,060,386</h2>
-                        <span>total earnings</span>
-                      </div>
-                    </div>
-                    <div class="overview-chart">
-                      <canvas id="widgetChart4"></canvas>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row m-t-25">
-              <h1>Hi {{account.user.firstName}}!</h1>
-              <p>You're logged in with Vue + Vuex & JWT!!</p>
-              <h3>Users from secure api end point:</h3>
-              <em v-if="users.loading">Loading users...</em>
-              <span v-if="users.error" class="text-danger">ERROR: {{users.error}}</span>
-              <ul v-if="users.items">
-                <li v-for="user in users.items" :key="user.id">
-                  {{user.firstName + ' ' + user.lastName}}
-                  <span v-if="user.deleting">
-                    <em>- Deleting...</em>
-                  </span>
-                  <span
-                    v-else-if="user.deleteError"
-                    class="text-danger"
-                  >- ERROR: {{user.deleteError}}</span>
-                  <span v-else>
-                    -
-                    <a @click="deleteUser(user.id)" class="text-danger">Delete</a>
-                  </span>
-                </li>
-              </ul>
-              <p>
-                <router-link to="/login">Logout</router-link>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- END MAIN CONTENT-->
-      <!-- END PAGE CONTAINER-->
-    </div> 
+  <div class="call-center-home">
+    <call-center-header />
+    <div class="home-content">
+        <table>
+          <thead>
+            <tr>
+              <th>Тип звонка</th>
+              <th>Дата вопроса</th>
+              <th>Категория вопроса</th>
+              <th>ФИО</th>
+              <th>Телефон</th>
+              <th>Сокращенный текст вопроса</th>
+              <th>Есть ответ</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr class="spacer"></tr>
+            <tr>
+              <td>
+                <select>
+                  <option>select</option>
+                  <option>select</option>
+                </select>
+              </td>
+              <td>Филтр</td>
+              <td>Филтр</td>
+              <td>
+                <input type="text" placeholder="Поиск">
+              </td>
+              <td>
+                <input type="text" placeholder="Поиск">
+              </td>
+              <td>
+                <input type="text" placeholder="Поиск">
+              </td>
+              <td>Филтр</td>
+            </tr>
+            <tr class="spacer"></tr>
+          <tr>
+            <td>lorem</td>
+            <td>lorem</td>
+            <td>lorem</td>
+            <td>lorem</td>
+            <td>lorem</td>
+            <td>lorem</td>
+            <td>lorem</td>
+          </tr>
+          </tbody>
+        </table>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import Sidebar from "../navigations/sidebar/Sidebar";
+import { mapActions, mapState } from 'vuex';
+import Header from '@/components/header/Header';
 
 export default {
-  components: {
-    Sidebar
-  },
-  computed: {
-    ...mapState({
-      account: state => state.account,
-      users: state => state.users.all
-    })
-  },
-  created() {
-    this.getAllUsers();
-  },
-  methods: {
-    ...mapActions("users", {
-      getAllUsers: "getAll",
-      deleteUser: "delete"
-    })
-  }
+    components: {
+        'call-center-header': Header
+    },
+    computed: {
+        ...mapState({
+            account: state => state.account,
+            users: state => state.users.all
+        })
+    },
+    created () {
+        this.getAllUsers();
+    },
+    methods: {
+        ...mapActions('users', {
+            getAllUsers: 'getAll',
+            deleteUser: 'delete'
+        }),
+        ...mapActions('account', [ 'logout' ]),
+        signOut (){
+            this.logout();
+        },
+
+    }
 };
 </script>
+<style lang="scss" scoped>
+  .call-center-home{
+    background-color: #f3f3f3;
+    width: 100%;
+    height: 100vh;
+  }
+  .home-content{
+    width: 100%;
+    table{
+      display: table;
+      width: 90%;
+      margin: 50px auto;
+      tr{
+        th{
+          font-family: Helvetica;
+          font-size: 18px;
+          font-weight: normal;
+          text-align: center;
+          color: #ee7739;
+          padding: 0 10px;
+        }
+        input::-webkit-input-placeholder{
+          text-align: center;
+        }
+        input{
+          text-align: center;
+        }
+        td{
+          text-align: center;
+        }
+        select{
+          border: none;
+          width: 100%;
+          height: 33px;
+          text-align-last: center;
+        }
+      }
+      tbody{
+        tr{
+          width: 100%;
+          height: 33px;
+          background-color: #ffffff;
+          td{
+            color: #707070;
+            font-size: 16px;
+          }
+        }
+      }
+      .spacer{
+        height: 20px;
+      }
+    }
+  }
+</style>
