@@ -1,73 +1,88 @@
 <template>
   <div class="call-history-container">
-      <call-center-header></call-center-header>
-      <div class="call-history-content">
-          <div class="call-history-profile">
-              <div class="profile-header">
-                  <span>Анкетная часть</span>
+    <CallCenterHeader />
+    <div class="call-history-content">
+      <div class="call-history-profile">
+        <div class="profile-header">
+          <span>Анкетная часть</span>
+        </div>
+        <div class="call-history-form">
+          <form @submit.prevent="saveData">
+            <div class="column-one">
+              <div>
+                <label>Телефон</label>
+                <input
+                  v-model="phone"
+                  v-validate="'required'"
+                  maxlength="10"
+                  type="text"
+                  placeholder="0556256585"
+                  name="phone"
+                  :class="{'is-invalid': submitted && errors.has('phone')}"
+                >
               </div>
-              <div class="call-history-form">
-                  <form>
-                      <div class="column-one">
-                          <div>
-                              <label>Телефон</label>
-                              <input>
-                          </div>
-                          <div>
-                              <label>ФИО</label>
-                              <input>
-                          </div>
-                          <div>
-                              <label>Школа № </label>
-                              <input>
-                          </div>
-                          <div>
-                              <label>Город</label>
-                              <input>
-                          </div>
-                      </div>
-
-                      <div class="column-two">
-                          <div>
-                              <label>Дополнительный номер</label>
-                              <input>
-                          </div>
-                          <div>
-                              <label>Статус</label>
-                              <select>
-                                  <option>select</option>
-                              </select>
-                          </div>
-                          <div class="divider"></div>
-                          <div class="village-region">
-                              <label>Село</label>
-                              <input>
-                              <label class="region">Район</label>
-                              <input>
-                          </div>
-                          <div class="save">
-                              <button>Save</button>
-                          </div>
-                      </div>
-
-                  </form>
+              <div>
+                <label>ФИО</label>
+                <input>
               </div>
-          </div>
-          <div class="call-history-buttons">
-              <button @click="showHistory">История Обращений</button>
-              <button @click="showQuestion">Новый вопрос</button>
-              <button @click="showClient">Информация о Клиенте</button>
-          </div>
-          <div v-show="showCallHistoryTable">
-              <call-history-table></call-history-table>
-          </div>
-          <div v-show="showNewQuestion">
-              <call-new-question></call-new-question>
-          </div>
-          <div v-show="showInfoClient">
-              <call-client-info></call-client-info>
-          </div>
+              <div>
+                <label>Школа № </label>
+                <input>
+              </div>
+              <div>
+                <label>Город</label>
+                <input>
+              </div>
+            </div>
+
+            <div class="column-two">
+              <div>
+                <label>Дополнительный номер</label>
+                <input>
+              </div>
+              <div>
+                <label>Статус</label>
+                <select>
+                  <option>select</option>
+                </select>
+              </div>
+              <div class="divider" />
+              <div class="village-region">
+                <label>Село</label>
+                <input>
+                <label class="region">
+                  Район
+                </label>
+                <input>
+              </div>
+              <div class="save">
+                <button type="submit">Save</button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
+      <div class="call-history-buttons">
+        <button @click="showHistory">
+          История Обращений
+        </button>
+        <button @click="showQuestion">
+          Новый вопрос
+        </button>
+        <button @click="showClient">
+          Информация о Клиенте
+        </button>
+      </div>
+      <div v-show="showCallHistoryTable">
+        <CallHistoryTable />
+      </div>
+      <div v-show="showNewQuestion">
+        <CallNewQuestion />
+      </div>
+      <div v-show="showInfoClient">
+        <CallClientInfo />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -91,9 +106,15 @@ export default {
             showCallHistoryTable: true,
             showNewQuestion: false,
             showInfoClient: false,
+            phone:'',
+            submitted: false,
         };
     },
     methods: {
+        showPhoneNumber ()
+        {
+            console.log(this.phone);
+        },
         showHistory ()
         {
             if (!this.showCallHistoryTable) {
@@ -117,7 +138,16 @@ export default {
                 this.showNewQuestion = false;
                 this.showInfoClient = true;
             }
-        }
+        },
+        saveData ()
+        {
+            this.submitted = true;
+            this.$validator.validate().then(valid => {
+                if (valid){
+                    console.log(this.phone);
+                }
+            });
+        },
     }
 
 };
@@ -170,6 +200,9 @@ export default {
                 background-color: #ffffff;
                 padding-left: 10px;
             }
+            input::-webkit-input-placeholder{
+                opacity: 0.4;
+            }
             select{
                 width: 106.9px;
                 height: 29px;
@@ -211,6 +244,9 @@ export default {
                     height: 100%;
                 }
             }
+        }
+        .is-invalid{
+            border: 1px solid red;
         }
 
     }
