@@ -66,6 +66,7 @@
                 font-style: normal;
                 color: #ffffff;
                 padding-left: 12px;
+                cursor: pointer;
             }
         }
         .main{
@@ -80,6 +81,7 @@
             font-style: normal;
             font-stretch: normal;
             color: #ffffff;
+            cursor: pointer;
         }
         .logout{
             margin-top: 8px;
@@ -102,6 +104,7 @@
             height: 20px;
         }
         span{
+            cursor: pointer;
             padding: 0 20px;
         }
     }

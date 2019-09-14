@@ -87,6 +87,7 @@ export default {
     background-color: #f3f3f3;
     width: 100%;
     height: 100vh;
+    display: table;
   }
   .home-content{
     width: 100%;
