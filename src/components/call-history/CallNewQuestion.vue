@@ -5,40 +5,150 @@
         <label class="category">
           Категория вопроса
         </label>
-        <select>
-          <option>ssadd</option>
+        <select
+                v-model="questionary.questionCategoryId"
+                v-validate="'required'"
+                name="category"
+                :class="{ active: submitted && errors.has('category') }"
+        >
+          <option v-for="category in categories" :key="category.id" :value="category.id">
+            {{ category.title }}
+          </option>
         </select>
       </div>
       <div>
         <label>Вопрос</label>
-        <textarea />
+        <textarea
+          v-model="questionary.question"
+          v-validate="'required'"
+          name="question"
+          :class="{active: submitted && errors.has('question')}"
+        ></textarea>
       </div>
       <div>
         <label>Ответ</label>
-        <textarea />
+        <textarea
+                v-model="questionary.answer"
+                :class="{'active': checkAnswer}"
+        ></textarea>
       </div>
       <div>
         <label>Комментарий оператора</label>
-        <textarea />
+        <textarea v-model="questionary.comment"></textarea>
       </div>
       <div class="database-check">
         <label>Предложить вопрос в Базу знаний</label>
         <input
+          v-model="dataCheck"
           type="checkbox"
-          checked
         >
       </div>
       <div>
-        <button>Ответ дан</button>
-        <button>Ответ не дан</button>
+        <button @click.prevent="saveWithAnswer()">
+          Ответ дан
+        </button>
+        <button @click.prevent="saveWithoutAnswer()">
+          Ответ не дан
+        </button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
+import { questionaryService } from '@/_services/questionary.service';
+import { questionCategoryService } from '@/_services/questionCategory.service';
+
 export default {
-    name: 'CallNewQuestion'
+    name: 'CallNewQuestion',
+    props: [ 'person', 'callType' ],
+    data () {
+        return {
+            questionary: {
+                answer: '',
+                callType: '',
+                comment: '',
+                question: '',
+                questionCategoryId: '',
+                repliedAt: '',
+                extraPhone: '',
+                firstName: '',
+                lastName: '',
+                middleName: '',
+                personType: '',
+                phone:'',
+                schoolId: '',
+                replied: null,
+            },
+            dataCheck: false,
+            submitted: false,
+            categories: '',
+            checkAnswer: false,
+            categoryRequired: false,
+        };
+    },
+    created () {
+        this.fetchCategories();
+    },
+    methods: {
+        saveWithAnswer ()
+        {
+            if (this.questionary.answer.length)
+            {
+                this.questionary.replied = true;
+                this.saveQuestionary();
+                this.checkAnswer = false;
+            }
+            else {
+                this.checkAnswer = true;
+            }
+
+        },
+        saveWithoutAnswer ()
+        {
+            this.checkAnswer = false;
+            this.questionary.replied = false;
+            this.saveQuestionary();
+        },
+        saveQuestionary ()
+        {
+            if (this.questionary.questionCategoryId === 0)
+            {
+                this.categoryRequired = true;
+            }
+            else {
+                this.categoryRequired = false;
+            }
+            this.submitted = true;
+            this.$validator.validate().then(valid => {
+                if (valid) {
+                    this.questionary.callType = this.callType;
+                    this.questionary.repliedAt = this.person.repliedAt;
+                    this.questionary.extraPhone = this.person.extraPhone;
+                    this.questionary.personType = this.person.personType;
+                    this.questionary.firstName = this.person.name;
+                    this.questionary.lastName = this.person.surname;
+                    this.questionary.middleName = this.person.patronymic;
+                    this.questionary.phone = this.person.phone;
+                    this.questionary.schoolId = this.person.schoolId;
+                    console.log(this.questionary);
+                    questionaryService.create(this.questionary).then(res => {
+                        console.log(res.message);
+                        this.$toaster.success(res.message, { timeout:3000 });
+                    }).catch(err => {
+                        console.log(err);
+                        this.$toaster.error('Something went wrong',{ timeout:3000 });
+                    });
+                }
+            }).catch(err => console.log(err));
+        },
+        fetchCategories ()
+        {
+            questionCategoryService.getAll().then(res => {
+                this.categories = res;
+            }).catch(err => console.log(err));
+        }
+    }
 };
 </script>
 
@@ -58,8 +168,8 @@ export default {
             select{
                 padding-left: 10px;
                 margin-left: 20px;
-                width: 135.9px;
-                height: 24px;
+                width: 200px;
+                height: 30px;
                 background-color: #ffffff;
                 border: none;
             }
@@ -97,5 +207,8 @@ export default {
                 color: #ffffff;
             }
         }
+    }
+    .active{
+        border: 1px solid red !important;
     }
 </style>

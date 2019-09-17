@@ -18,45 +18,60 @@
                   type="text"
                   placeholder="0556256585"
                   name="phone"
-                  :class="{'is-invalid': submitted && errors.has('phone')}"
+                  :class="{'is-invalid': (submitted && errors.has('phone')) || validPhone}"
+                  @keyup="checkPhone($event)"
                 >
               </div>
               <div>
-                <label>ФИО</label>
-                <input>
+                <label>Имя</label>
+                <input v-model="person.name">
+              </div>
+              <div>
+                <label>Фамилия</label>
+                <input v-model="person.surname">
+              </div>
+              <div>
+                <label>Отчество</label>
+                <input v-model="person.patronymic">
               </div>
               <div>
                 <label>Школа № </label>
-                <input>
-              </div>
-              <div>
-                <label>Город</label>
-                <input>
+                <input v-model="person.schoolTitle">
               </div>
             </div>
 
             <div class="column-two">
               <div>
                 <label>Дополнительный номер</label>
-                <input>
+                <input v-model="person.extraPhone">
               </div>
               <div>
                 <label>Статус</label>
-                <select>
-                  <option>select</option>
+                <select v-model="person.personType">
+                  <option v-for="type in parentType" :key="type.id" :value="type.id">
+                    {{ type.name }}
+                  </option>
                 </select>
               </div>
-              <div class="divider" />
-              <div class="village-region">
-                <label>Село</label>
-                <input>
-                <label class="region">
+              <div>
+                <label>Дата</label>
+                <a-date-picker
+                  v-model="dateNow"
+                  show-time
+                  format="YYYY-MM-DD HH:mm"
+                  placeholder="Выберите дату">
+
+                </a-date-picker>
+              </div>
+              <div>
+                <label>
                   Район
                 </label>
-                <input>
+                <input v-model="school.rayon.title">
               </div>
-              <div class="save">
-                <button type="submit">Save</button>
+              <div>
+                <label>Регион</label>
+                <input v-model="school.region.title">
               </div>
             </div>
           </form>
@@ -73,14 +88,21 @@
           Информация о Клиенте
         </button>
       </div>
-      <div v-show="showCallHistoryTable">
+      <div v-if="showCallHistoryTable">
         <CallHistoryTable />
       </div>
-      <div v-show="showNewQuestion">
-        <CallNewQuestion />
+      <div v-if="showNewQuestion">
+        <CallNewQuestion v-if="renderComponent"
+          :person="person"
+          :call-type="callType"
+        />
       </div>
-      <div v-show="showInfoClient">
-        <CallClientInfo />
+      <div v-if="showInfoClient">
+        <CallClientInfo
+                v-if="renderComponent"
+                :person="person"
+                :school="school"
+        />
       </div>
     </div>
   </div>
@@ -91,6 +113,11 @@ import Header from '@/components/header/Header';
 import CallHistoryTable from '@/components/call-history/CallHistoryTable';
 import CallNewQuestion from '@/components/call-history/CallNewQuestion';
 import CallClientInfo from '@/components/call-history/CallClientInfo';
+import { personService } from '@/_services/person.service';
+import { schoolService } from '@/_services/school.service';
+import moment from 'moment';
+
+moment.locale('ru');
 
 export default {
     name: 'CallHistory',
@@ -98,7 +125,7 @@ export default {
         CallCenterHeader: Header,
         CallHistoryTable,
         CallNewQuestion,
-        CallClientInfo
+        CallClientInfo,
     },
     data ()
     {
@@ -108,12 +135,72 @@ export default {
             showInfoClient: false,
             phone:'',
             submitted: false,
+            person:{
+              repliedAt:'',
+              extraPhone:'',
+              personType:1,
+            },
+            dateNow:moment(),
+            school: {
+                rayon: {
+                    title: '',
+                },
+                region: {
+                    title: '',
+                }
+            },
+            validPhone:false,
+            selectedPerson: null,
+            callType:'',
+            parentType: [
+                {
+                    id:1,
+                    name: 'Родитель',
+                },
+                {
+                    id:2,
+                    name: 'Ученик',
+                },
+                {
+                    id:3,
+                    name: 'Другой',
+                }
+            ],
+            renderComponent: true,
         };
     },
+    created () {
+        this.checkCallType();
+    },
     methods: {
-        showPhoneNumber ()
+        checkPhone (e)
         {
-            console.log(this.phone);
+            if (isNaN(e.target.value)){
+                this.validPhone = true;
+            } else {
+                this.validPhone = false;
+                if (e.target.value.length === 0)
+                {
+
+                }
+                if (e.target.value.length >= 1)
+                {
+                    personService.getByPhone(this.phone).then(res => {
+                        this.person = res;
+                        this.person.personType = 1;
+                        this.person.repliedAt = '';
+                        this.person.extraPhone = '';
+                        this.fetchSchool(res.schoolId);
+                    }).then(() => {
+                        this.forceRerender();
+                    }).catch(err => console.log(err));
+                }
+            }
+        },
+        fetchSchool (id){
+            schoolService.getById(id).then(res => {
+                this.school = res;
+            }).catch(err => console.log(err));
         },
         showHistory ()
         {
@@ -130,6 +217,8 @@ export default {
                 this.showNewQuestion = true;
                 this.showInfoClient = false;
             }
+            this.person.repliedAt= moment(this.dateNow).format('DD.MM.YYYY HH:mm');
+            this.checkCallType();
         },
         showClient ()
         {
@@ -148,7 +237,30 @@ export default {
                 }
             });
         },
-    }
+        checkCallType ()
+        {
+            if (this.$route.path === '/call-history'){
+                this.callType = 1;
+            }
+            else if (this.$route.path === '/call-history-outgoing')
+            {
+                this.callType = 2;
+            }
+        },
+        formatDate () {
+            this.person.repliedAt= moment(this.dateNow).format('DD.MM.YYYY HH:mm');
+        },
+        forceRerender () {
+            this.formatDate();
+            this.renderComponent = false;
+
+            this.$nextTick(() => {
+            // Add the component back in
+                this.renderComponent = true;
+            });
+        }
+    },
+
 
 };
 </script>
@@ -194,6 +306,10 @@ export default {
                 letter-spacing: 0.06px;
                 color: #707070;
             }
+            .ant-calendar-picker-input{
+              border: none;
+              height: 29px!important;
+            }
             input{
                 width: 70%;
                 height: 29px;
@@ -216,6 +332,7 @@ export default {
             margin: 0 5% 0 0;
         }
         .column-two{
+          width: 60%;
             label{
                 width: 200px;
                 padding-right: 5px;
@@ -224,11 +341,6 @@ export default {
             .region{
                 width: 50px !important;
                 text-align: center;
-            }
-            .village-region{
-                input{
-                    width: 25%;
-                }
             }
             input{
                 width: 40%;

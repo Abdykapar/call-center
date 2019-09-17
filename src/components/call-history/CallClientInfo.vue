@@ -1,70 +1,80 @@
 <template>
-    <div class="client-info">
-<!--        <div class="client-info-header">-->
-<!--            <span>Header 1</span>-->
-<!--            <span>Header 2</span>-->
-<!--            <span>Header 3</span>-->
-<!--        </div>-->
-<!--        <div class="client-info-question">-->
-<!--            <span>Технический вопрос</span>-->
-<!--            <span>Технический вопрос</span>-->
-<!--            <span>Технический вопрос</span>-->
-<!--        </div>-->
-        <div class="client-info-call-center">
-            <div class="column-left">
-                <div class="item">
-                    <label>ФИО</label>
-                    <div class="info">
-                        <span>dasda</span>
-                    </div>
-                </div>
-                <div class="item">
-                    <label>Телефон</label>
-                    <div class="info">
-                        <span>dasda</span>
-                    </div>
-                </div>
-                <div class="item">
-                    <label>Школа №</label>
-                    <div class="info">
-                        <span>dasda</span>
-                    </div>
-                </div>
-                <div class="item">
-                    <label>Город</label>
-                    <div class="info">
-                        <span>dasda</span>
-                    </div>
-                </div>
-            </div>
-            <div class="column-right">
-                <div class="item">
-                    <label>Дополнительный номер</label>
-                    <div class="info">
-                        <span>dasda</span>
-                    </div>
-                </div>
-                <div class="item">
-                    <label>Село</label>
-                    <div class="info">
-                        <span>dasda</span>
-                    </div>
-                </div>
-                <div class="item">
-                    <label>Район</label>
-                    <div class="info">
-                        <span>dasda</span>
-                    </div>
-                </div>
-            </div>
+  <div class="client-info">
+    <div class="client-info-call-center">
+      <div class="column-left">
+        <div class="item">
+          <label>ФИО</label>
+          <div class="info">
+            <span>{{ fullName }}</span>
+          </div>
         </div>
+        <div class="item">
+          <label>Телефон</label>
+          <div class="info">
+            <span>{{ person.phone }}</span>
+          </div>
+        </div>
+        <div class="item">
+          <label>Школа №</label>
+          <div class="info">
+            <span>{{ person.schoolTitle }}</span>
+          </div>
+        </div>
+        <div class="item">
+          <label>Регион</label>
+          <div class="info">
+            <span>{{ school.region.title }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="column-right">
+        <div class="item">
+          <label>Адрес</label>
+          <div class="info">
+            <span>{{ person.address }}</span>
+          </div>
+        </div>
+        <div class="item">
+          <label>Position</label>
+          <div class="info">
+            <span>{{ person.position }}</span>
+          </div>
+        </div>
+        <div class="item">
+          <label>Район</label>
+          <div class="info">
+            <span>{{ school.rayon.title }}</span>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: 'CallClientInfo'
-    };
+export default {
+    name: 'CallClientInfo',
+    props: [ 'person','school' ],
+    data (){
+        return {
+            fullName: '',
+        };
+    },
+    created () {
+        this.fullName = this.notUndefined(this.person.name) +' '+ this.notUndefined(this.person.surname) +' '+ this.notUndefined(this.person.patronymic);
+    },
+    methods:{
+        notUndefined (name){
+            if (name !== undefined || name !== null)
+            {
+                return name;
+            }
+            else {
+                return '';
+            }
+        }
+    }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -108,9 +118,9 @@
             }
         }
         .column-right{
-            label{
-                width: 300px;
-            }
+            /*label{*/
+            /*    width: 300px;*/
+            /*}*/
         }
     }
     .client-info-header{
