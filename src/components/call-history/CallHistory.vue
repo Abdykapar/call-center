@@ -89,7 +89,9 @@
         </button>
       </div>
       <div v-if="showCallHistoryTable">
-        <CallHistoryTable />
+        <CallHistoryTable
+                v-if="renderComponent"
+                :data="data"/>
       </div>
       <div v-if="showNewQuestion">
         <CallNewQuestion v-if="renderComponent"
@@ -109,6 +111,7 @@
 </template>
 
 <script>
+import { questionaryService } from '@/_services/questionary.service';
 import Header from '@/components/header/Header';
 import CallHistoryTable from '@/components/call-history/CallHistoryTable';
 import CallNewQuestion from '@/components/call-history/CallNewQuestion';
@@ -136,9 +139,9 @@ export default {
             phone:'',
             submitted: false,
             person:{
-              repliedAt:'',
-              extraPhone:'',
-              personType:1,
+                repliedAt:'',
+                extraPhone:'',
+                personType:1,
             },
             dateNow:moment(),
             school: {
@@ -167,6 +170,7 @@ export default {
                 }
             ],
             renderComponent: true,
+            data: [],
         };
     },
     created () {
@@ -181,7 +185,22 @@ export default {
                 this.validPhone = false;
                 if (e.target.value.length === 0)
                 {
-
+                    this.person = {
+                        name: '',
+                        surname: '',
+                        patronymic: '',
+                        schoolTitle: '',
+                        extraPhone: '',
+                    };
+                    this.school = {
+                        rayon: {
+                            title: '',
+                        },
+                        region: {
+                            title: '',
+                        }
+                    };
+                    this.data = [];
                 }
                 if (e.target.value.length >= 1)
                 {
@@ -192,6 +211,13 @@ export default {
                         this.person.extraPhone = '';
                         this.fetchSchool(res.schoolId);
                     }).then(() => {
+                        if (this.showCallHistoryTable)
+                        {
+                            this.fetchData(this.person.phone);
+                        }
+                        else if (this.showNewQuestion){
+                            this.formatDate();
+                        }
                         this.forceRerender();
                     }).catch(err => console.log(err));
                 }
@@ -208,7 +234,9 @@ export default {
                 this.showCallHistoryTable = true;
                 this.showNewQuestion = false;
                 this.showInfoClient = false;
+                this.fetchData(this.person.phone);
             }
+
         },
         showQuestion ()
         {
@@ -251,13 +279,23 @@ export default {
             this.person.repliedAt= moment(this.dateNow).format('DD.MM.YYYY HH:mm');
         },
         forceRerender () {
-            this.formatDate();
             this.renderComponent = false;
 
             this.$nextTick(() => {
             // Add the component back in
                 this.renderComponent = true;
             });
+        },
+        fetchData (phone)
+        {
+            questionaryService.getByPhone(phone).then(res => {
+                if (res['_embedded'])
+                {
+                    this.data = res['_embedded']['questionaryResourceList'];
+                }
+                else this.data = [];
+                console.log(this.data);
+            }).catch(err => console.log(err));
         }
     },
 

@@ -8,6 +8,7 @@ export const questionaryService = {
     getById,
     getAll,
     getByCategory,
+    getByNotReplied,
     getByPhone,
     getByFio,
     delete: _delete
@@ -67,6 +68,15 @@ function getByPhone (phone) {
     };
 
     return fetch(`${config.apiUrl}/questionary/get-by-phone/${phone}`, requestOptions).then(handleResponse);
+}
+
+function getByNotReplied () {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(`${config.apiUrl}/questionary/not-replied`, requestOptions).then(handleResponse);
 }
 
 function update (data){

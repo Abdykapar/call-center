@@ -13,44 +13,32 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="spacer" />
-        <tr>
-          <td>1</td>
-          <td>08.08.2019</td>
-          <td>+</td>
-          <td>08.08.2019</td>
-          <td>Технический вопрос</td>
-          <td>Не могу открыть страницу</td>
-          <td>Предоставили данные</td>
-        </tr>
-        <tr class="spacer" />
-        <tr>
-          <td>1</td>
-          <td>08.08.2019</td>
-          <td>+</td>
-          <td>08.08.2019</td>
-          <td>Технический вопрос</td>
-          <td>Не могу открыть страницу</td>
-          <td>Предоставили данные</td>
-        </tr>
-        <tr class="spacer" />
-        <tr>
-          <td>1</td>
-          <td>08.08.2019</td>
-          <td>+</td>
-          <td>08.08.2019</td>
-          <td>Технический вопрос</td>
-          <td>Не могу открыть страницу</td>
-          <td />
-        </tr>
+        <template v-for="(item,index) in data" >
+          <tr class="spacer"></tr>
+          <tr :key="item.uuid">
+            <td>{{ index+1 }}</td>
+            <td>{{ item.repliedAt }}</td>
+            <td>{{ item.replied === true ? '+' : '-' }}</td>
+            <td>{{ item.repliedAt }}</td>
+            <td>{{ item.categoryTitle }}</td>
+            <td>{{ item.question }}</td>
+            <td>{{ item.answer }}</td>
+          </tr>
+        </template>
       </tbody>
     </table>
+    <pagination></pagination>
   </div>
 </template>
 
 <script>
+import Pagination from '@/components/pagination/Pagination';
 export default {
-    name: 'CallHistoryTable'
+    name: 'CallHistoryTable',
+    components: {
+        Pagination
+    },
+    props: [ 'data' ],
 };
 </script>
 

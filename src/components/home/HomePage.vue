@@ -12,6 +12,7 @@
               <th>Телефон</th>
               <th>Сокращенный текст вопроса</th>
               <th>Есть ответ</th>
+              <th>Дать ответ</th>
             </tr>
           </thead>
           <tbody>
@@ -35,51 +36,70 @@
                 <input type="text" placeholder="Поиск">
               </td>
               <td>Филтр</td>
+              <td></td>
             </tr>
+          <template v-for="item in data">
             <tr class="spacer"></tr>
-          <tr>
-            <td>lorem</td>
-            <td>lorem</td>
-            <td>lorem</td>
-            <td>lorem</td>
-            <td>lorem</td>
-            <td>lorem</td>
-            <td>lorem</td>
-          </tr>
+            <tr :key="item.uuid">
+              <td>{{ item.callType === 1 ? 'Входящий' : 'Исходящий' }}</td>
+              <td>{{ item.repliedAt }}</td>
+              <td>{{ item.categoryTitle }}</td>
+              <td>{{ item.fullName }}</td>
+              <td>{{ item.phone }}</td>
+              <td>{{ item.shortQuestion }}{{ item.question.length > 20 ? '...' : ' ' }}</td>
+              <td>{{ item.replied === 1 ? '+' : '-' }}</td>
+              <td><i @click="goToAnswer" class="fa fa-phone"></i></td>
+            </tr>
+          </template>
+
           </tbody>
         </table>
+      <pagination></pagination>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { questionaryService } from '@/_services/questionary.service';
 import Header from '@/components/header/Header';
+import Pagination from '@/components/pagination/Pagination';
 
 export default {
+    name: 'Home',  
     components: {
-        'call-center-header': Header
+        'call-center-header': Header,
+        Pagination
     },
-    computed: {
-        ...mapState({
-            account: state => state.account,
-            users: state => state.users.all
-        })
+    data () {
+        return {
+            data: [],
+        };
     },
     created () {
-        this.getAllUsers();
+        this.fetchData();
     },
     methods: {
-        ...mapActions('users', {
-            getAllUsers: 'getAll',
-            deleteUser: 'delete'
-        }),
-        ...mapActions('account', [ 'logout' ]),
-        signOut (){
-            this.logout();
+        fetchData ()
+        {
+            questionaryService.getByNotReplied().then(res => {
+                if (res['_embedded'])
+                {
+                    this.data = res['_embedded']['questionaryResourceList'].map(item => {
+                        item.shortQuestion = item.question.substring(0,20);
+                        return item;
+                    });
+                }
+                else {
+                    this.data = [];
+                }
+            }).catch(err => console.log(err));
         },
+        goToAnswer ()
+        {
 
+        }
     }
+    
 };
 </script>
 <style lang="scss" scoped>
@@ -94,7 +114,7 @@ export default {
     table{
       display: table;
       width: 90%;
-      margin: 50px auto;
+      margin: 50px auto 0 auto;
       tr{
         th{
           font-family: Helvetica;
@@ -128,6 +148,10 @@ export default {
           td{
             color: #707070;
             font-size: 16px;
+            i{
+              cursor: pointer;
+              color: #ee7739;
+            }
           }
         }
       }
