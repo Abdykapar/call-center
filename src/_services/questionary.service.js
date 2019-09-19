@@ -24,13 +24,13 @@ function create (data) {
     return fetch(`${config.apiUrl}/questionary/create`, requestOptions).then(handleResponse);
 }
 
-function getAll () {
+function getAll (page, size) {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
 
-    return fetch(`${config.apiUrl}/questionary/list`, requestOptions)
+    return fetch(`${config.apiUrl}/questionary/list?page=${page}&${size}`, requestOptions)
         .then(handleResponse);
 }
 

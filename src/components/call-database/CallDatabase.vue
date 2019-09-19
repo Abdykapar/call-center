@@ -61,25 +61,37 @@
         </tbody>
       </table>
     </div>
+      <pagination
+              v-if="questions.length"
+              :total-pages="totalPages"
+              :current-page="currentPage"
+              :page-size="pageSize"
+              @changePage="changePage"
+      ></pagination>
   </div>
 </template>
 
 <script>
 import Header from '@/components/header/Header';
 import { questionaryService } from '@/_services/questionary.service';
+import Pagination from '@/components/pagination/Pagination';
 export default {
     name: 'CallDatabase',
     components: {
-        'call-center-header': Header
+        'call-center-header': Header,
+        Pagination,
     },
     data () {
         return {
             questions: [],
+            currentPage:0,
+            totalPages:0,
+            pageSize: 0,
         };
     },
     created ()
     {
-        this.fetchQuestions()
+        this.fetchQuestions();
     },
     methods: {
         fetchQuestions ()
@@ -91,9 +103,32 @@ export default {
                         item.shortQuestion = item.question.substring(0,20);
                         return item;
                     });
+                    this.currentPage = res.page.number;
+                    this.totalPages = res.page.totalPages;
+                    this.pageSize = res.page.size;
                 }
             }).catch(err => console.log(err));
-        }
+        },
+        fetchPages (page, size)
+        {
+            questionaryService.getAll(page, size).then(res => {
+                if (res['_embedded']['questionaryResourceList'])
+                {
+                    this.questions = res['_embedded']['questionaryResourceList'].map(item => {
+                        item.shortQuestion = item.question.substring(0,20);
+                        return item;
+                    });
+                    this.currentPage = res.page.number;
+                    this.totalPages = res.page.totalPages;
+                    this.pageSize = res.page.size;
+                }
+            }).catch(err => console.log(err));
+        },
+        changePage (page, size)
+        {
+            console.log('comes');
+            this.fetchPages(page, size);
+        },
     }
 };
 </script>

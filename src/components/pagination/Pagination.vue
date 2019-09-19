@@ -1,18 +1,32 @@
 <template>
-    <div class="call-pagination">
-        <div class="pagination-item">
-            <button>Previous</button>
-        </div>
-        <div class="pagination-item">
-            <button>Next</button>
-        </div>
+  <div class="call-pagination">
+      <div class="pagination-item">
+          <button v-if="currentPage >= totalPages - 1" class="disabled">Next</button>
+          <button v-else @click="nextPage">Next</button>
+      </div>
+      <div class="pagination-item">
+      <button v-if="currentPage <= 0" class="disabled" >Previous</button>
+      <button v-else @click="previousPage">Previous</button>
     </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: 'Pagination'
-    };
+export default {
+    name: 'Pagination',
+    props: [ 'totalPages', 'pageSize', 'currentPage' ],
+    methods: {
+        nextPage ()
+        {
+            console.log('next page');
+            this.$emit('changePage',this.currentPage + 1, this.pageSize);
+        },
+        previousPage ()
+        {
+            this.$emit('changePage',this.currentPage - 1, this.pageSize);
+        }
+    }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -38,5 +52,9 @@
                 color: white;
             }
         }
+    }
+    .disabled{
+        opacity: 0.4;
+        cursor: not-allowed;
     }
 </style>
