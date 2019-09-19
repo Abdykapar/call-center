@@ -1,66 +1,101 @@
 <template>
-    <div class="call-center-home">
-        <call-center-header />
-        <div class="home-content">
-            <table>
-                <thead>
-                <tr>
-                    <th>Тип звонка</th>
-                    <th>Дата вопроса</th>
-                    <th>Категория вопроса</th>
-                    <th>ФИО</th>
-                    <th>Телефон</th>
-                    <th>Сокращенный текст вопроса</th>
-                    <th>Есть ответ</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="spacer"></tr>
-                <tr>
-                    <td>
-                        <select>
-                            <option>select</option>
-                            <option>select</option>
-                        </select>
-                    </td>
-                    <td>Филтр</td>
-                    <td>Филтр</td>
-                    <td>
-                        <input type="text" placeholder="Поиск">
-                    </td>
-                    <td>
-                        <input type="text" placeholder="Поиск">
-                    </td>
-                    <td>
-                        <input type="text" placeholder="Поиск">
-                    </td>
-                    <td>Филтр</td>
-                </tr>
-                <tr class="spacer"></tr>
-                <tr>
-                    <td>lorem</td>
-                    <td>lorem</td>
-                    <td>lorem</td>
-                    <td>lorem</td>
-                    <td>lorem</td>
-                    <td>lorem</td>
-                    <td>lorem</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+  <div class="call-center-home">
+    <call-center-header></call-center-header>
+    <div class="home-content">
+      <table>
+        <thead>
+          <tr>
+            <th>Тип звонка</th>
+            <th>Дата вопроса</th>
+            <th>Категория вопроса</th>
+            <th>ФИО</th>
+            <th>Телефон</th>
+            <th>Сокращенный текст вопроса</th>
+            <th>Есть ответ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="spacer"></tr>
+          <tr>
+            <td>
+              <select>
+                <option>select</option>
+                <option>select</option>
+              </select>
+            </td>
+            <td>Филтр</td>
+            <td>Филтр</td>
+            <td>
+              <input
+                type="text"
+                placeholder="Поиск"
+              >
+            </td>
+            <td>
+              <input
+                type="text"
+                placeholder="Поиск"
+              >
+            </td>
+            <td>
+              <input
+                type="text"
+                placeholder="Поиск"
+              >
+            </td>
+            <td>Филтр</td>
+          </tr>
+          <tr class="spacer"></tr>
+          <template v-for="item in questions">
+              <tr class="spacer"></tr>
+              <tr :key="item.uuid">
+                  <td>{{ item.callType === 1 ? 'Входящий' : 'Исходящий' }}</td>
+                  <td>{{ item.repliedAt }}</td>
+                  <td>{{ item.categoryTitle }}</td>
+                  <td>{{ item.firstName }} {{ item.lastName }} {{ item.patronymic }}</td>
+                  <td>{{ item.phone }}</td>
+                  <td>{{ item.shortQuestion }}{{ item.question.length > 20 ? '...' : ' ' }}</td>
+                  <td>{{ item.replied === 1 ? '+' : '-' }}</td>
+              </tr>
+          </template>
+        </tbody>
+      </table>
     </div>
+  </div>
 </template>
 
 <script>
-    import Header from '@/components/header/Header';
-
-    export default {
-        name: 'callDatabase',
-        components: {
-            'call-center-header': Header
-        },
-    };
+import Header from '@/components/header/Header';
+import { questionaryService } from '@/_services/questionary.service';
+export default {
+    name: 'CallDatabase',
+    components: {
+        'call-center-header': Header
+    },
+    data () {
+        return {
+            questions: [],
+        };
+    },
+    created ()
+    {
+        this.fetchQuestions()
+    },
+    methods: {
+        fetchQuestions ()
+        {
+            questionaryService.getAll().then(res => {
+                if (res['_embedded']['questionaryResourceList'])
+                {
+                    this.questions = res['_embedded']['questionaryResourceList'].map(item => {
+                        item.shortQuestion = item.question.substring(0,20);
+                        return item;
+                    });
+                }
+            }).catch(err => console.log(err));
+        }
+    }
+};
 </script>
 <style lang="scss" scoped>
     .call-center-home{

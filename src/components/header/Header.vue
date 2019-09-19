@@ -24,9 +24,13 @@
     </div>
     <div class="divider"></div>
     <div class="header-nav-bar">
-      <span :class="{'active': url.includes('/call-center/data')}">
-        <img src="/static/images/header/books-stack-of-three%20(1)@3x.png">
-        База знаний
+      <span :class="{'active': url.includes('/call-data')}">
+        <router-link :to="{ name: 'CallDatabase' }">
+            <img v-if="$route.path !== '/call-data'" src="/static/images/header/books-stack-of-three%20(1)@3x.png">
+            <img v-else src="/static/images/header/book-red.png">
+            База знаний
+        </router-link>
+
       </span>
       <span :class="{'active': $route.path === '/call-history-outgoing'}">
         <router-link :to="{ name: 'CallHistoryOutgoing' }">
