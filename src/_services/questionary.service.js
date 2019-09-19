@@ -61,22 +61,22 @@ function getByFio (name, surname, middle_name) {
     return fetch(`${config.apiUrl}/questionary/get-by-fio/${name}/${surname}/${middle_name}`, requestOptions).then(handleResponse);
 }
 
-function getByPhone (phone) {
+function getByPhone (phone, page, size) {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
 
-    return fetch(`${config.apiUrl}/questionary/get-by-phone/${phone}`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/questionary/get-by-phone/${phone}?page=${page}&size=${size}`, requestOptions).then(handleResponse);
 }
 
-function getByNotReplied () {
+function getByNotReplied (page, size) {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
 
-    return fetch(`${config.apiUrl}/questionary/not-replied`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/questionary/not-replied?page=${page}&size=${size}`, requestOptions).then(handleResponse);
 }
 
 function update (data){

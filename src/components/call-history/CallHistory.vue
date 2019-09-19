@@ -91,7 +91,10 @@
       <div v-if="showCallHistoryTable">
         <CallHistoryTable
                 v-if="renderComponent"
-                :data="data"/>
+                :data="data"
+                :page-data="pageData"
+                :phone="phone"
+        />
       </div>
       <div v-if="showNewQuestion">
         <CallNewQuestion v-if="renderComponent"
@@ -173,6 +176,13 @@ export default {
             renderComponent: true,
             data: [],
             updateQuestionary: false,
+            pageData: {
+                page: {
+                    number: 0,
+                    size: 0,
+                    totalPages: 0,
+                }
+            },
         };
     },
     created () {
@@ -207,11 +217,28 @@ export default {
                 if (e.target.value.length >= 1)
                 {
                     personService.getByPhone(this.phone).then(res => {
-                        this.person = res;
-                        this.person.personType = 1;
-                        this.person.repliedAt = '';
-                        this.person.extraPhone = '';
-                        this.fetchSchool(res.schoolId);
+                        if (res)
+                        {
+                            this.person = res;
+                            this.person.personType = 1;
+                            this.person.repliedAt = '';
+                            this.person.extraPhone = '';
+                            this.fetchSchool(res.schoolId);
+                            this.updateQuestionary = false;
+                        }
+                        else {
+                            this.person = {
+                                personType: 1,
+                                repliedAt: '',
+                                extraPhone: '',
+                                name: '',
+                                surname: '',
+                                patronymic: '',
+                                schoolTitle: '',
+                            };
+                            this.school.region.title = '';
+                            this.school.rayon.title = '';
+                        }
                     }).then(() => {
                         if (this.showCallHistoryTable)
                         {
@@ -227,7 +254,20 @@ export default {
         },
         fetchSchool (id){
             schoolService.getById(id).then(res => {
-                this.school = res;
+                if (res)
+                {
+                    this.school = res;
+                }
+                else {
+                    this.school = {
+                        region: {
+                            title: '',
+                        },
+                        rayon: {
+                            title: '',
+                        }
+                    };
+                }
             }).catch(err => console.log(err));
         },
         showHistory ()
@@ -295,8 +335,8 @@ export default {
                 {
                     this.data = res['_embedded']['questionaryResourceList'];
                 }
-                else this.data = [];
-                console.log(this.data);
+                else { this.data = []; }
+                this.pageData = res;
             }).catch(err => console.log(err));
         }
     },

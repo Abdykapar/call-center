@@ -13,7 +13,7 @@
         </tr>
       </thead>
       <tbody>
-        <template v-for="(item,index) in data" >
+        <template v-for="(item,index) in allData" >
           <tr class="spacer"></tr>
           <tr :key="item.uuid">
             <td>{{ index+1 }}</td>
@@ -27,18 +27,66 @@
         </template>
       </tbody>
     </table>
-    <pagination v-if="data.length"></pagination>
+    <pagination
+            v-if="allData.length"
+            :page-size="pageSize"
+            :total-pages="totalPages"
+            :current-page="currentPage"
+            @changePage="changePage"
+    ></pagination>
   </div>
 </template>
 
 <script>
+import { questionaryService } from '@/_services/questionary.service';
 import Pagination from '@/components/pagination/Pagination';
 export default {
     name: 'CallHistoryTable',
     components: {
         Pagination
     },
-    props: [ 'data' ],
+    props: [ 'data', 'pageData', 'phone' ],
+    data () {
+        return {
+            currentPage: 0,
+            totalPages: 0,
+            pageSize: 0,
+            questionHistory: [],
+        };
+    },
+    computed: {
+        allData: function () {
+            this.questionHistory = this.data;
+            return this.questionHistory;
+        }
+    },
+    created () {
+        this.fetchAll();
+    },
+    methods: {
+        fetchAll ()
+        {
+            this.currentPage = this.pageData.page.number;
+            this.totalPages = this.pageData.page.totalPages;
+            this.pageSize = this.pageData.page.size;
+        },
+        fetchPages (page, size)
+        {
+            questionaryService.getByPhone(this.phone, page, size).then(res => {
+                if (res['_embedded'])
+                {
+                    this.questionHistory = res['_embedded']['questionaryResourceList'];
+                }
+                else { this.questionHistory = []; }
+                this.currentPage = res.page.number;
+                this.totalPages = res.page.totalPages;
+                this.pageSize = res.page.size;
+            }).catch(err => console.log(err));
+        },
+        changePage (page, size) {
+            this.fetchPages(page, size);
+        }
+    }
 };
 </script>
 

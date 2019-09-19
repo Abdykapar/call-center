@@ -58,7 +58,13 @@
 
           </tbody>
         </table>
-      <pagination></pagination>
+      <pagination
+          v-if="data.length"
+          :total-pages="totalPages"
+          :current-page="currentPage"
+          :page-size="pageSize"
+          @changePage="changePage"
+      ></pagination>
     </div>
     <md-dialog :md-active.sync="showQuestionary">
 
@@ -81,6 +87,9 @@ export default {
         return {
             data: [],
             showQuestionary: false,
+            totalPages: 0,
+            currentPage: 0,
+            pageSize: 0,
         };
     },
     created () {
@@ -96,18 +105,35 @@ export default {
                         item.shortQuestion = item.question.substring(0,20);
                         return item;
                     });
+                    this.currentPage = res.page.number;
+                    this.totalPages = res.page.totalPages;
+                    this.pageSize = res.page.size;
                 }
                 else {
                     this.data = [];
                 }
             }).catch(err => console.log(err));
         },
-        goToAnswer (data)
+        fetchPages (page, size)
         {
-            // this.showQuestionary = true;
-            this.$router.push({ path: '/call-history-outgoing',params: { questionaryToAnswer: data } });
-
-        }
+            questionaryService.getByNotReplied(page, size).then(res => {
+                if (res['_embedded']['questionaryResourceList'])
+                {
+                    this.data = res['_embedded']['questionaryResourceList'].map(item => {
+                        item.shortQuestion = item.question.substring(0,20);
+                        return item;
+                    });
+                    this.currentPage = res.page.number;
+                    this.totalPages = res.page.totalPages;
+                    this.pageSize = res.page.size;
+                }
+                else { this.data = []; }
+            }).catch(err => console.log(err));
+        },
+        changePage (page, size)
+        {
+            this.fetchPages(page, size);
+        },
     }
     
 };

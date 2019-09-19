@@ -44,7 +44,6 @@
           type="checkbox"
         >
       </div>
-      <p>{{ person.name }} {{ person.schoolTitle }} {{ person.repliedAt }}</p>
       <div>
         <button @click.prevent="saveWithAnswer()">
           Ответ дан

@@ -94,6 +94,8 @@
         <CallHistoryTable
           v-if="renderComponent"
           :data="data"
+          :page-data="pageData"
+          :phone="phone"
         />
       </div>
       <div v-if="showNewQuestion">
@@ -184,12 +186,18 @@ export default {
             renderComponent: true,
             data: [],
             updateQuestionary: false,
+            pageData: {
+                page: {
+                    number: 0,
+                    size: 0,
+                    totalPages: 0,
+                }
+            },
         };
     },
     computed: {
         personChanged: function () {
             this.person.repliedAt= moment(this.dateNow).format('DD.MM.YYYY HH:mm');
-            console.log('person changed',this.person);
             return this.person;
         }
     },
@@ -226,6 +234,19 @@ export default {
                     this.fetchSchool(res.schoolId);
                     this.updateQuestionary = false;
                 }
+                else {
+                    this.person = {
+                        personType: 1,
+                        repliedAt: '',
+                        extraPhone: '',
+                        name: '',
+                        surname: '',
+                        patronymic: '',
+                        schoolTitle: '',
+                    };
+                    this.school.region.title = '';
+                    this.school.rayon.title = '';
+                }
             }).then(() => {
                 if (this.showCallHistoryTable)
                 {
@@ -239,7 +260,20 @@ export default {
         },
         fetchSchool (id){
             schoolService.getById(id).then(res => {
-                this.school = res;
+                if (res)
+                {
+                    this.school = res;
+                }
+                else {
+                    this.school = {
+                        region: {
+                            title: '',
+                        },
+                        rayon: {
+                            title: '',
+                        }
+                    };
+                }
             }).catch(err => console.log(err));
         },
         showHistory ()
@@ -307,7 +341,6 @@ export default {
                     this.data = res['_embedded']['questionaryResourceList'];
                 }
                 else {this.data = [];}
-                console.log(this.data);
             }).catch(err => console.log(err));
         },
         checkAnswerCall ()
