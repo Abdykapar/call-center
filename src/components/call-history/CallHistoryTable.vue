@@ -18,7 +18,7 @@
           <tr :key="item.uuid">
             <td>{{ index+1 }}</td>
             <td>{{ item.repliedAt }}</td>
-            <td>{{ item.replied === true ? '+' : '-' }}</td>
+            <td>{{ item.replied === 1 ? '+' : '-' }}</td>
             <td>{{ item.repliedAt }}</td>
             <td>{{ item.categoryTitle }}</td>
             <td>{{ item.question }}</td>
@@ -27,7 +27,7 @@
         </template>
       </tbody>
     </table>
-    <pagination></pagination>
+    <pagination v-if="data.length"></pagination>
   </div>
 </template>
 

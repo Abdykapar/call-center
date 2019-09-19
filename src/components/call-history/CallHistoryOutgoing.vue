@@ -1,290 +1,336 @@
 <template>
-    <div class="call-history-container">
-        <CallCenterHeader />
-        <div class="call-history-content">
-            <div class="call-history-profile">
-                <div class="profile-header">
-                    <span>Анкетная часть</span>
-                </div>
-                <div class="call-history-form">
-                    <form @submit.prevent="saveData">
-                        <div class="column-one">
-                            <div>
-                                <label>Телефон</label>
-                                <input
-                                        v-model="phone"
-                                        v-validate="'required'"
-                                        maxlength="10"
-                                        type="text"
-                                        placeholder="0556256585"
-                                        name="phone"
-                                        :class="{'is-invalid': (submitted && errors.has('phone')) || validPhone}"
-                                        @keyup="checkPhone($event)"
-                                >
-                            </div>
-                            <div>
-                                <label>Имя</label>
-                                <input v-model="person.name">
-                            </div>
-                            <div>
-                                <label>Фамилия</label>
-                                <input v-model="person.surname">
-                            </div>
-                            <div>
-                                <label>Отчество</label>
-                                <input v-model="person.patronymic">
-                            </div>
-                            <div>
-                                <label>Школа № </label>
-                                <input v-model="person.schoolTitle">
-                            </div>
-                        </div>
-
-                        <div class="column-two">
-                            <div>
-                                <label>Дополнительный номер</label>
-                                <input v-model="person.extraPhone">
-                            </div>
-                            <div>
-                                <label>Статус</label>
-                                <select v-model="person.personType">
-                                    <option v-for="type in parentType" :key="type.id" :value="type.id">
-                                        {{ type.name }}
-                                    </option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Дата</label>
-                                <a-date-picker
-                                        v-model="dateNow"
-                                        show-time
-                                        format="YYYY-MM-DD HH:mm"
-                                        placeholder="Выберите дату">
-
-                                </a-date-picker>
-                            </div>
-                            <div>
-                                <label>
-                                    Район
-                                </label>
-                                <input v-model="school.rayon.title">
-                            </div>
-                            <div>
-                                <label>Регион</label>
-                                <input v-model="school.region.title">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="call-history-buttons">
-                <button @click="showHistory">
-                    История Обращений
-                </button>
-                <button @click="showQuestion">
-                    Новый вопрос
-                </button>
-                <button @click="showClient">
-                    Информация о Клиенте
-                </button>
-            </div>
-            <div v-if="showCallHistoryTable">
-                <CallHistoryTable
-                        v-if="renderComponent"
-                        :data="data"/>
-            </div>
-            <div v-if="showNewQuestion">
-                <CallNewQuestion v-if="renderComponent"
-                                 :person="person"
-                                 :call-type="callType"
-                />
-            </div>
-            <div v-if="showInfoClient">
-                <CallClientInfo
-                        v-if="renderComponent"
-                        :person="person"
-                        :school="school"
-                />
-            </div>
+  <div class="call-history-container">
+    <CallCenterHeader />
+    <div class="call-history-content">
+      <div class="call-history-profile">
+        <div class="profile-header">
+          <span>Анкетная часть</span>
         </div>
+        <div class="call-history-form">
+          <form @submit.prevent="saveData">
+            <div class="column-one">
+              <div>
+                <label>Телефон</label>
+                <input
+                  v-model="phone"
+                  v-validate="'required'"
+                  maxlength="10"
+                  type="text"
+                  placeholder="0556256585"
+                  name="phone"
+                  :class="{'is-invalid': (submitted && errors.has('phone')) || validPhone}"
+                  @keyup="checkPhone($event)"
+                >
+              </div>
+              <div>
+                <label>Имя</label>
+                <input v-model="person.name">
+              </div>
+              <div>
+                <label>Фамилия</label>
+                <input v-model="person.surname">
+              </div>
+              <div>
+                <label>Отчество</label>
+                <input v-model="person.patronymic">
+              </div>
+              <div>
+                <label>Школа № </label>
+                <input v-model="person.schoolTitle">
+              </div>
+            </div>
+
+            <div class="column-two">
+              <div>
+                <label>Дополнительный номер</label>
+                <input v-model="person.extraPhone">
+              </div>
+              <div>
+                <label>Статус</label>
+                <select v-model="person.personType">
+                  <option
+                    v-for="type in parentType"
+                    :key="type.id"
+                    :value="type.id"
+                  >
+                    {{ type.name }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label>Дата</label>
+                <a-date-picker
+                  v-model="dateNow"
+                  show-time
+                  format="YYYY-MM-DD HH:mm"
+                  placeholder="Выберите дату"></a-date-picker>
+              </div>
+              <div>
+                <label>
+                  Район
+                </label>
+                <input v-model="school.rayon.title">
+              </div>
+              <div>
+                <label>Регион</label>
+                <input v-model="school.region.title">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="call-history-buttons">
+        <button @click="showHistory" :class="{ 'active-button' : showCallHistoryTable }">
+          История Обращений
+        </button>
+        <button @click="showQuestion" :class="{ 'active-button' : showNewQuestion }">
+          Новый вопрос
+        </button>
+        <button @click="showClient" :class="{ 'active-button' : showInfoClient }">
+          Информация о Клиенте
+        </button>
+      </div>
+      <div v-if="showCallHistoryTable">
+        <CallHistoryTable
+          v-if="renderComponent"
+          :data="data"
+        />
+      </div>
+      <div v-if="showNewQuestion">
+        <CallNewQuestion
+          v-if="renderComponent"
+          :person="personChanged"
+          :call-type="callType"
+          :data="questionaryToAnswer"
+          :update-or-not="updateQuestionary"
+        />
+      </div>
+      <div v-if="showInfoClient">
+        <CallClientInfo
+          v-if="renderComponent"
+          :person="personChanged"
+          :school="school"
+        />
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-    import { questionaryService } from '@/_services/questionary.service';
-    import Header from '@/components/header/Header';
-    import CallHistoryTable from '@/components/call-history/CallHistoryTable';
-    import CallNewQuestion from '@/components/call-history/CallNewQuestion';
-    import CallClientInfo from '@/components/call-history/CallClientInfo';
-    import { personService } from '@/_services/person.service';
-    import { schoolService } from '@/_services/school.service';
-    import moment from 'moment';
+import { questionaryService } from '@/_services/questionary.service';
+import Header from '@/components/header/Header';
+import CallHistoryTable from '@/components/call-history/CallHistoryTable';
+import CallNewQuestion from '@/components/call-history/CallNewQuestion';
+import CallClientInfo from '@/components/call-history/CallClientInfo';
+import { personService } from '@/_services/person.service';
+import { schoolService } from '@/_services/school.service';
+import moment from 'moment';
 
-    moment.locale('ru');
+moment.locale('ru');
 
-    export default {
-        name: 'CallHistoryOutgoing',
-        components:{
-            CallCenterHeader: Header,
-            CallHistoryTable,
-            CallNewQuestion,
-            CallClientInfo,
-        },
-        data ()
-        {
-            return {
-                showCallHistoryTable: true,
-                showNewQuestion: false,
-                showInfoClient: false,
-                phone:'',
-                submitted: false,
-                person:{
-                    repliedAt:'',
-                    extraPhone:'',
-                    personType:1,
+export default {
+    name: 'CallHistoryOutgoing',
+    components:{
+        CallCenterHeader: Header,
+        CallHistoryTable,
+        CallNewQuestion,
+        CallClientInfo,
+    },
+    // eslint-disable-next-line vue/require-prop-types
+    props: [ 'questionaryToAnswer' ],
+    data ()
+    {
+        return {
+            showCallHistoryTable: true,
+            showNewQuestion: false,
+            showInfoClient: false,
+            phone:'',
+            submitted: false,
+            person:{
+                name:'',
+                surname:'',
+                patronymic: '',
+                repliedAt:'',
+                extraPhone:'',
+                personType:1,
+                schoolTitle:'',
+            },
+            dateNow:moment(),
+            school: {
+                rayon: {
+                    title: '',
                 },
-                dateNow:moment(),
-                school: {
-                    rayon: {
-                        title: '',
-                    },
-                    region: {
-                        title: '',
-                    }
-                },
-                validPhone:false,
-                selectedPerson: null,
-                callType:'',
-                parentType: [
-                    {
-                        id:1,
-                        name: 'Родитель',
-                    },
-                    {
-                        id:2,
-                        name: 'Ученик',
-                    },
-                    {
-                        id:3,
-                        name: 'Другой',
-                    }
-                ],
-                renderComponent: true,
-                data: [],
-            };
-        },
-        created () {
-            this.checkCallType();
-        },
-        methods: {
-            checkPhone (e)
-            {
-                if (isNaN(e.target.value)){
-                    this.validPhone = true;
-                } else {
-                    this.validPhone = false;
-                    if (e.target.value.length === 0)
-                    {
-
-                    }
-                    if (e.target.value.length >= 1)
-                    {
-                        personService.getByPhone(this.phone).then(res => {
-                            this.person = res;
-                            this.person.personType = 1;
-                            this.person.repliedAt = '';
-                            this.person.extraPhone = '';
-                            this.fetchSchool(res.schoolId);
-                        }).then(() => {
-                            if (this.showCallHistoryTable)
-                            {
-                                this.fetchData(this.person.phone);
-                            }
-                            else if (this.showNewQuestion){
-                                this.formatDate();
-                            }
-                            this.forceRerender();
-                        }).catch(err => console.log(err));
-                    }
+                region: {
+                    title: '',
                 }
             },
-            fetchSchool (id){
-                schoolService.getById(id).then(res => {
-                    this.school = res;
-                }).catch(err => console.log(err));
-            },
-            showHistory ()
-            {
-                if (!this.showCallHistoryTable) {
-                    this.showCallHistoryTable = true;
-                    this.showNewQuestion = false;
-                    this.showInfoClient = false;
-                    this.fetchData(this.person.phone);
-                }
-
-            },
-            showQuestion ()
-            {
-                if (!this.showNewQuestion) {
-                    this.showCallHistoryTable = false;
-                    this.showNewQuestion = true;
-                    this.showInfoClient = false;
-                }
-                this.person.repliedAt= moment(this.dateNow).format('DD.MM.YYYY HH:mm');
-                this.checkCallType();
-            },
-            showClient ()
-            {
-                if (!this.showInfoClient) {
-                    this.showCallHistoryTable = false;
-                    this.showNewQuestion = false;
-                    this.showInfoClient = true;
-                }
-            },
-            saveData ()
-            {
-                this.submitted = true;
-                this.$validator.validate().then(valid => {
-                    if (valid){
-                        console.log(this.phone);
-                    }
-                });
-            },
-            checkCallType ()
-            {
-                if (this.$route.path === '/call-history'){
-                    this.callType = 1;
-                }
-                else if (this.$route.path === '/call-history-outgoing')
+            validPhone:false,
+            selectedPerson: null,
+            callType:'',
+            parentType: [
                 {
-                    this.callType = 2;
+                    id:1,
+                    name: 'Родитель',
+                },
+                {
+                    id:2,
+                    name: 'Ученик',
+                },
+                {
+                    id:3,
+                    name: 'Другой',
                 }
-            },
-            formatDate () {
-                this.person.repliedAt= moment(this.dateNow).format('DD.MM.YYYY HH:mm');
-            },
-            forceRerender () {
-                this.renderComponent = false;
-                this.$nextTick(() => {
-                    // Add the component back in
-                    this.renderComponent = true;
-                });
-            },
-            fetchData (phone)
-            {
-                questionaryService.getByPhone(phone).then(res => {
-                    if (res['_embedded'])
-                    {
-                        this.data = res['_embedded']['questionaryResourceList'];
-                    }
-                    else this.data = [];
-                    console.log(this.data);
-                }).catch(err => console.log(err));
+            ],
+            renderComponent: true,
+            data: [],
+            updateQuestionary: false,
+        };
+    },
+    computed: {
+        personChanged: function () {
+            this.person.repliedAt= moment(this.dateNow).format('DD.MM.YYYY HH:mm');
+            console.log('person changed',this.person);
+            return this.person;
+        }
+    },
+    created () {
+        this.checkCallType();
+        this.checkAnswerCall();
+    },
+    methods: {
+        checkPhone (e)
+        {
+            if (isNaN(e.target.value)){
+                this.validPhone = true;
+            } else {
+                this.validPhone = false;
+                // if (e.target.value.length === 0)
+                // {
+                //
+                // }
+                if (e.target.value.length >= 1)
+                {
+                    this.fetchPersonWithPhone(this.phone);
+                }
             }
         },
+        fetchPersonWithPhone (phone)
+        {
+            personService.getByPhone(phone).then(res => {
+                if (res)
+                {
+                    this.person = res;
+                    this.person.personType = 1;
+                    this.person.repliedAt = '';
+                    this.person.extraPhone = '';
+                    this.fetchSchool(res.schoolId);
+                    this.updateQuestionary = false;
+                }
+            }).then(() => {
+                if (this.showCallHistoryTable)
+                {
+                    this.fetchData(this.person.phone);
+                }
+                else if (this.showNewQuestion){
+                    this.formatDate();
+                }
+                this.forceRerender();
+            }).catch(err => console.log(err));
+        },
+        fetchSchool (id){
+            schoolService.getById(id).then(res => {
+                this.school = res;
+            }).catch(err => console.log(err));
+        },
+        showHistory ()
+        {
+            if (!this.showCallHistoryTable) {
+                this.showCallHistoryTable = true;
+                this.showNewQuestion = false;
+                this.showInfoClient = false;
+                this.fetchData(this.person.phone);
+            }
+
+        },
+        showQuestion ()
+        {
+            if (!this.showNewQuestion) {
+                this.showCallHistoryTable = false;
+                this.showNewQuestion = true;
+                this.showInfoClient = false;
+            }
+            // this.person.repliedAt= moment(this.dateNow).format('DD.MM.YYYY HH:mm');
+            // this.checkCallType();
+        },
+        showClient ()
+        {
+            if (!this.showInfoClient) {
+                this.showCallHistoryTable = false;
+                this.showNewQuestion = false;
+                this.showInfoClient = true;
+            }
+        },
+        saveData ()
+        {
+            this.submitted = true;
+            this.$validator.validate().then(valid => {
+                if (valid){
+                    console.log(this.phone);
+                }
+            });
+        },
+        checkCallType ()
+        {
+            if (this.$route.path === '/call-history'){
+                this.callType = 1;
+            }
+            else if (this.$route.path === '/call-history-outgoing')
+            {
+                this.callType = 2;
+            }
+        },
+        formatDate () {
+            this.person.repliedAt= moment(this.dateNow).format('DD.MM.YYYY HH:mm');
+        },
+        forceRerender () {
+            this.renderComponent = false;
+            this.$nextTick(() => {
+                // Add the component back in
+                this.renderComponent = true;
+            });
+        },
+        fetchData (phone)
+        {
+            questionaryService.getByPhone(phone).then(res => {
+                if (res['_embedded'])
+                {
+                    this.data = res['_embedded']['questionaryResourceList'];
+                }
+                else {this.data = [];}
+                console.log(this.data);
+            }).catch(err => console.log(err));
+        },
+        checkAnswerCall ()
+        {
+            if (this.questionaryToAnswer)
+            {
+                this.updateQuestionary = true;
+                this.showQuestion();
+                this.phone = this.questionaryToAnswer.phone;
+                this.person.schoolTitle = this.questionaryToAnswer.schoolName;
+                this.person.personType = this.questionaryToAnswer.personType;
+                this.person.extraPhone = this.questionaryToAnswer.extraPhone;
+                this.person.name = this.questionaryToAnswer.firstName;
+                this.person.surname = this.questionaryToAnswer.lastName;
+                this.person.patronymic = this.questionaryToAnswer.patronymic;
+                this.person.phone = this.questionaryToAnswer.phone;
+                this.fetchSchool(this.questionaryToAnswer.schoolId);
+            }else console.log(false);
+        },
+    },
 
 
-    };
+};
 </script>
 
 <style lang="scss" scoped>
@@ -401,5 +447,10 @@
             color: #707070;
             margin: 0 20px;
         }
+    }
+    .active-button
+    {
+        background-color: #ee7739 !important;
+        color: white!important;
     }
 </style>

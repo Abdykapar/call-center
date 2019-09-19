@@ -5,7 +5,7 @@
         <div class="item">
           <label>ФИО</label>
           <div class="info">
-            <span>{{ fullName }}</span>
+            <span>{{ person.name }} {{ person.surname }} {{ person.patronymic }}</span>
           </div>
         </div>
         <div class="item">
@@ -60,20 +60,6 @@ export default {
             fullName: '',
         };
     },
-    created () {
-        this.fullName = this.notUndefined(this.person.name) +' '+ this.notUndefined(this.person.surname) +' '+ this.notUndefined(this.person.patronymic);
-    },
-    methods:{
-        notUndefined (name){
-            if (name !== undefined || name !== null)
-            {
-                return name;
-            }
-            else {
-                return '';
-            }
-        }
-    }
 };
 </script>
 
@@ -98,15 +84,17 @@ export default {
             letter-spacing: 0.07px;
             color: #ee7739;
             width: 100px;
+            padding-top: 10px;
         }
         span{
 
         }
         .info{
-            margin: auto 0 auto 10px;
+            margin: 5px 0 auto 10px;
             height: 30px;
             background-color: #ffffff;
             width: 262.9px;
+            display: flex;
             span{
                 font-size: 16px;
                 font-weight: normal;
@@ -115,6 +103,7 @@ export default {
                 letter-spacing: 0.06px;
                 color: #707070;
                 margin-left: 10px;
+                padding-top: 5px;
             }
         }
         .column-right{

@@ -162,9 +162,9 @@ export default {
             cursor: pointer;
             padding: 10px 20px;
         }
-      a {
-        color: #ffffff;
-      }
+        a{
+            color: white;
+        }
     }
     .active{
         color: #ee7739;
@@ -173,5 +173,9 @@ export default {
           color: #ee7739;
           text-decoration: none;
       }
+
+    }
+    .md-theme-default a:not(.md-button){
+        text-decoration: none;
     }
 </style>

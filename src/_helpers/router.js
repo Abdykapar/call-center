@@ -21,7 +21,8 @@ export const router = new Router({
         {
             name: 'CallHistoryOutgoing',
             path: '/call-history-outgoing',
-            component: CallHistoryOutgoing
+            component: CallHistoryOutgoing,
+            props: true,
         },
         // otherwise redirect to home
         { path: '*', redirect: '/' }

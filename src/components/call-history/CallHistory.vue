@@ -78,13 +78,13 @@
         </div>
       </div>
       <div class="call-history-buttons">
-        <button @click="showHistory">
+        <button @click="showHistory" :class="{ 'active-button' : showCallHistoryTable }">
           История Обращений
         </button>
-        <button @click="showQuestion">
+        <button @click="showQuestion" :class="{ 'active-button' : showNewQuestion }">
           Новый вопрос
         </button>
-        <button @click="showClient">
+        <button @click="showClient" :class="{ 'active-button' : showInfoClient }">
           Информация о Клиенте
         </button>
       </div>
@@ -97,6 +97,7 @@
         <CallNewQuestion v-if="renderComponent"
           :person="person"
           :call-type="callType"
+                         :update-or-not="updateQuestionary"
         />
       </div>
       <div v-if="showInfoClient">
@@ -171,6 +172,7 @@ export default {
             ],
             renderComponent: true,
             data: [],
+            updateQuestionary: false,
         };
     },
     created () {
@@ -417,5 +419,10 @@ export default {
             color: #707070;
             margin: 0 20px;
         }
+    }
+    .active-button
+    {
+      background-color: #ee7739 !important;
+      color: white!important;
     }
 </style>

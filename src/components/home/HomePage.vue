@@ -44,11 +44,15 @@
               <td>{{ item.callType === 1 ? 'Входящий' : 'Исходящий' }}</td>
               <td>{{ item.repliedAt }}</td>
               <td>{{ item.categoryTitle }}</td>
-              <td>{{ item.fullName }}</td>
+              <td>{{ item.firstName }} {{ item.lastName }} {{ item.patronymic }}</td>
               <td>{{ item.phone }}</td>
               <td>{{ item.shortQuestion }}{{ item.question.length > 20 ? '...' : ' ' }}</td>
               <td>{{ item.replied === 1 ? '+' : '-' }}</td>
-              <td><i @click="goToAnswer" class="fa fa-phone"></i></td>
+              <td>
+                <router-link :to="{ name: 'CallHistoryOutgoing', params: { questionaryToAnswer: item } }">
+                  <i class="fa fa-phone"></i>
+                </router-link>
+              </td>
             </tr>
           </template>
 
@@ -56,6 +60,9 @@
         </table>
       <pagination></pagination>
     </div>
+    <md-dialog :md-active.sync="showQuestionary">
+
+    </md-dialog>
   </div>
 </template>
 
@@ -73,6 +80,7 @@ export default {
     data () {
         return {
             data: [],
+            showQuestionary: false,
         };
     },
     created () {
@@ -94,8 +102,10 @@ export default {
                 }
             }).catch(err => console.log(err));
         },
-        goToAnswer ()
+        goToAnswer (data)
         {
+            // this.showQuestionary = true;
+            this.$router.push({ path: '/call-history-outgoing',params: { questionaryToAnswer: data } });
 
         }
     }

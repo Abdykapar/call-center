@@ -34,7 +34,8 @@
       </div>
       <div>
         <label>Комментарий оператора</label>
-        <textarea v-model="questionary.comment"></textarea>
+        <textarea v-model="questionary.comment">
+        </textarea>
       </div>
       <div class="database-check">
         <label>Предложить вопрос в Базу знаний</label>
@@ -43,6 +44,7 @@
           type="checkbox"
         >
       </div>
+      <p>{{ person.name }} {{ person.schoolTitle }} {{ person.repliedAt }}</p>
       <div>
         <button @click.prevent="saveWithAnswer()">
           Ответ дан
@@ -61,7 +63,7 @@ import { questionCategoryService } from '@/_services/questionCategory.service';
 
 export default {
     name: 'CallNewQuestion',
-    props: [ 'person', 'callType' ],
+    props: [ 'person', 'callType', 'data', 'updateOrNot' ],
     data () {
         return {
             questionary: {
@@ -89,8 +91,26 @@ export default {
     },
     created () {
         this.fetchCategories();
+        this.checkHasData();
+        console.log(this.questionary);
     },
     methods: {
+        checkHasData ()
+        {
+            if (this.data)
+            {
+                this.questionary = {
+                    answer: this.data.answer,
+                    callType: this.data.callType,
+                    comment: this.data.comment,
+                    question: this.data.question,
+                    questionCategoryId: this.data.categoryId,
+                    phone:this.data.phone,
+                    schoolId: this.data.schoolId,
+                    id: this.data.uuid,
+                };
+            }
+        },
         saveWithAnswer ()
         {
             if (this.questionary.answer.length)
@@ -112,33 +132,44 @@ export default {
         },
         saveQuestionary ()
         {
-            if (this.questionary.questionCategoryId === 0)
-            {
-                this.categoryRequired = true;
-            }
-            else {
-                this.categoryRequired = false;
-            }
+            this.categoryRequired = this.questionary.questionCategoryId === 0;
             this.submitted = true;
             this.$validator.validate().then(valid => {
                 if (valid) {
-                    this.questionary.callType = this.callType;
-                    this.questionary.repliedAt = this.person.repliedAt;
-                    this.questionary.extraPhone = this.person.extraPhone;
-                    this.questionary.personType = this.person.personType;
-                    this.questionary.firstName = this.person.name;
-                    this.questionary.lastName = this.person.surname;
-                    this.questionary.middleName = this.person.patronymic;
-                    this.questionary.phone = this.person.phone;
-                    this.questionary.schoolId = this.person.schoolId;
-                    console.log(this.questionary);
-                    questionaryService.create(this.questionary).then(res => {
-                        console.log(res.message);
-                        this.$toaster.success(res.message, { timeout:3000 });
-                    }).catch(err => {
-                        console.log(err);
-                        this.$toaster.error('Something went wrong',{ timeout:3000 });
-                    });
+                    if (this.updateOrNot)
+                    {
+                        this.questionary.repliedAt = this.person.repliedAt;
+                        this.questionary.extraPhone = this.person.extraPhone;
+                        this.questionary.personType = this.person.personType;
+                        this.questionary.firstName = this.person.name;
+                        this.questionary.lastName = this.person.surname;
+                        this.questionary.middleName = this.person.patronymic;
+                        questionaryService.update(this.questionary).then(res => {
+                            this.$toaster.success(res.message, { timeout:2000 });
+                        }).catch(err => {
+                            console.log(err);
+                            this.$toaster.error('Something went wrong',{ timeout:2000 });
+                        });
+                    }
+                    else {
+                        this.questionary.callType = this.callType;
+                        this.questionary.repliedAt = this.person.repliedAt;
+                        this.questionary.extraPhone = this.person.extraPhone;
+                        this.questionary.personType = this.person.personType;
+                        this.questionary.firstName = this.person.name;
+                        this.questionary.lastName = this.person.surname;
+                        this.questionary.middleName = this.person.patronymic;
+                        this.questionary.phone = this.person.phone;
+                        this.questionary.schoolId = this.person.schoolId;
+                        questionaryService.create(this.questionary).then(res => {
+                            console.log(res.message);
+                            this.$toaster.success(res.message, { timeout:3000 });
+                        }).catch(err => {
+                            console.log(err);
+                            this.$toaster.error('Something went wrong',{ timeout:3000 });
+                        });
+                    }
+
                 }
             }).catch(err => console.log(err));
         },
