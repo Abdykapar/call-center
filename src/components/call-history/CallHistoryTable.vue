@@ -10,6 +10,7 @@
           <th>Категория</th>
           <th>Вопрос</th>
           <th>Ответ</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -23,6 +24,11 @@
             <td>{{ item.categoryTitle }}</td>
             <td>{{ item.question }}</td>
             <td>{{ item.answer }}</td>
+            <td>
+              <button v-if="item.replied === 2 && callType === 2" @click="$emit('answerQuestion',item)">
+                <i class="fa fa-phone"></i>
+              </button>
+            </td>
           </tr>
         </template>
       </tbody>
@@ -45,7 +51,7 @@ export default {
     components: {
         Pagination
     },
-    props: [ 'data', 'pageData', 'phone' ],
+    props: [ 'data', 'pageData', 'phone', 'callType' ],
     data () {
         return {
             currentPage: 0,
@@ -91,6 +97,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    .fa-phone{
+        color: #ee7739;
+    }
     .call-history{
         table{
             width: 93%;

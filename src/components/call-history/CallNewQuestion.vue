@@ -6,7 +6,7 @@
           Категория вопроса
         </label>
         <select
-                v-model="questionary.questionCategoryId"
+                v-model="updatedData.categoryId"
                 v-validate="'required'"
                 name="category"
                 :class="{ active: submitted && errors.has('category') }"
@@ -19,7 +19,7 @@
       <div>
         <label>Вопрос</label>
         <textarea
-          v-model="questionary.question"
+          v-model="updatedData.question"
           v-validate="'required'"
           name="question"
           :class="{active: submitted && errors.has('question')}"
@@ -28,13 +28,13 @@
       <div>
         <label>Ответ</label>
         <textarea
-                v-model="questionary.answer"
+                v-model="updatedData.answer"
                 :class="{'active': checkAnswer}"
         ></textarea>
       </div>
       <div>
         <label>Комментарий оператора</label>
-        <textarea v-model="questionary.comment">
+        <textarea v-model="updatedData.comment">
         </textarea>
       </div>
       <div class="database-check">
@@ -88,31 +88,18 @@ export default {
             categoryRequired: false,
         };
     },
+    computed: {
+        updatedData: function () {
+            return this.data;
+        },
+    },
     created () {
         this.fetchCategories();
-        this.checkHasData();
-        console.log(this.questionary);
     },
     methods: {
-        checkHasData ()
-        {
-            if (this.data)
-            {
-                this.questionary = {
-                    answer: this.data.answer,
-                    callType: this.data.callType,
-                    comment: this.data.comment,
-                    question: this.data.question,
-                    questionCategoryId: this.data.categoryId,
-                    phone:this.data.phone,
-                    schoolId: this.data.schoolId,
-                    id: this.data.uuid,
-                };
-            }
-        },
         saveWithAnswer ()
         {
-            if (this.questionary.answer.length)
+            if (this.updatedData.answer.length)
             {
                 this.questionary.replied = true;
                 this.saveQuestionary();
@@ -137,6 +124,16 @@ export default {
                 if (valid) {
                     if (this.updateOrNot)
                     {
+                        this.questionary = {
+                            answer: this.updatedData.answer,
+                            callType: this.updatedData.callType,
+                            comment: this.updatedData.comment,
+                            question: this.updatedData.question,
+                            questionCategoryId: this.updatedData.categoryId,
+                            phone:this.updatedData.phone,
+                            schoolId: this.updatedData.schoolId,
+                            id: this.updatedData.uuid,
+                        };
                         this.questionary.repliedAt = this.person.repliedAt;
                         this.questionary.extraPhone = this.person.extraPhone;
                         this.questionary.personType = this.person.personType;
@@ -151,22 +148,7 @@ export default {
                         });
                     }
                     else {
-                        this.questionary.callType = this.callType;
-                        this.questionary.repliedAt = this.person.repliedAt;
-                        this.questionary.extraPhone = this.person.extraPhone;
-                        this.questionary.personType = this.person.personType;
-                        this.questionary.firstName = this.person.name;
-                        this.questionary.lastName = this.person.surname;
-                        this.questionary.middleName = this.person.patronymic;
-                        this.questionary.phone = this.person.phone;
-                        this.questionary.schoolId = this.person.schoolId;
-                        questionaryService.create(this.questionary).then(res => {
-                            console.log(res.message);
-                            this.$toaster.success(res.message, { timeout:3000 });
-                        }).catch(err => {
-                            console.log(err);
-                            this.$toaster.error('Something went wrong',{ timeout:3000 });
-                        });
+                        this.$toaster.error('Nothing to answer');
                     }
 
                 }

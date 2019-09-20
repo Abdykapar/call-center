@@ -84,7 +84,7 @@
           История Обращений
         </button>
         <button @click="showQuestion" :class="{ 'active-button' : showNewQuestion }">
-          Новый вопрос
+          Ответить на вопрос
         </button>
         <button @click="showClient" :class="{ 'active-button' : showInfoClient }">
           Информация о Клиенте
@@ -95,7 +95,9 @@
           v-if="renderComponent"
           :data="data"
           :page-data="pageData"
+          :call-type="callType"
           :phone="phone"
+          @answerQuestion="answerQuestion"
         />
       </div>
       <div v-if="showNewQuestion">
@@ -103,7 +105,7 @@
           v-if="renderComponent"
           :person="personChanged"
           :call-type="callType"
-          :data="questionaryToAnswer"
+          :data="updatedFirstData"
           :update-or-not="updateQuestionary"
         />
       </div>
@@ -185,7 +187,7 @@ export default {
             ],
             renderComponent: true,
             data: [],
-            updateQuestionary: false,
+            updateQuestionary: true,
             pageData: {
                 page: {
                     number: 0,
@@ -193,12 +195,16 @@ export default {
                     totalPages: 0,
                 }
             },
+            firstData: [],
         };
     },
     computed: {
         personChanged: function () {
             this.person.repliedAt= moment(this.dateNow).format('DD.MM.YYYY HH:mm');
             return this.person;
+        },
+        updatedFirstData: function () {
+            return this.firstData;
         }
     },
     created () {
@@ -212,10 +218,6 @@ export default {
                 this.validPhone = true;
             } else {
                 this.validPhone = false;
-                // if (e.target.value.length === 0)
-                // {
-                //
-                // }
                 if (e.target.value.length >= 1)
                 {
                     this.fetchPersonWithPhone(this.phone);
@@ -232,7 +234,7 @@ export default {
                     this.person.repliedAt = '';
                     this.person.extraPhone = '';
                     this.fetchSchool(res.schoolId);
-                    this.updateQuestionary = false;
+                    this.fetchData(phone);
                 }
                 else {
                     this.person = {
@@ -293,8 +295,6 @@ export default {
                 this.showNewQuestion = true;
                 this.showInfoClient = false;
             }
-            // this.person.repliedAt= moment(this.dateNow).format('DD.MM.YYYY HH:mm');
-            // this.checkCallType();
         },
         showClient ()
         {
@@ -339,6 +339,7 @@ export default {
                 if (res['_embedded'])
                 {
                     this.data = res['_embedded']['questionaryResourceList'];
+                    this.firstData = res['_embedded']['questionaryResourceList'].filter(item => item.replied === 2)[0];
                 }
                 else {this.data = [];}
             }).catch(err => console.log(err));
@@ -347,7 +348,6 @@ export default {
         {
             if (this.questionaryToAnswer)
             {
-                this.updateQuestionary = true;
                 this.showQuestion();
                 this.phone = this.questionaryToAnswer.phone;
                 this.person.schoolTitle = this.questionaryToAnswer.schoolName;
@@ -358,8 +358,14 @@ export default {
                 this.person.patronymic = this.questionaryToAnswer.patronymic;
                 this.person.phone = this.questionaryToAnswer.phone;
                 this.fetchSchool(this.questionaryToAnswer.schoolId);
-            }else console.log(false);
+                this.firstData = this.questionaryToAnswer;
+            } else { console.log(false); }
         },
+        answerQuestion (question)
+        {
+            this.firstData = question;
+            this.showQuestion();
+        }
     },
 
 
