@@ -11,6 +11,7 @@ export const questionaryService = {
     getByNotReplied,
     getByPhone,
     getByFio,
+    getList,
     delete: _delete
 };
 
@@ -31,6 +32,16 @@ function getAll (page, size) {
     };
 
     return fetch(`${config.apiUrl}/questionary/list?page=${page}&${size}`, requestOptions)
+        .then(handleResponse);
+}
+
+function getList () {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(`${config.apiUrl}/questionary/list-without-pagination`, requestOptions)
         .then(handleResponse);
 }
 

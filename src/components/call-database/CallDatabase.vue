@@ -16,36 +16,6 @@
         </thead>
         <tbody>
           <tr class="spacer"></tr>
-          <tr>
-            <td>
-              <select>
-                <option>select</option>
-                <option>select</option>
-              </select>
-            </td>
-            <td>Филтр</td>
-            <td>Филтр</td>
-            <td>
-              <input
-                type="text"
-                placeholder="Поиск"
-              >
-            </td>
-            <td>
-              <input
-                type="text"
-                placeholder="Поиск"
-              >
-            </td>
-            <td>
-              <input
-                type="text"
-                placeholder="Поиск"
-              >
-            </td>
-            <td>Филтр</td>
-          </tr>
-          <tr class="spacer"></tr>
           <template v-for="item in questions">
               <tr class="spacer"></tr>
               <tr :key="item.uuid">

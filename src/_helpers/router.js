@@ -6,6 +6,7 @@ import LoginPage from '../components/login/LoginPage';
 import CallHistory from '@/components/call-history/CallHistory';
 import CallHistoryOutgoing from '@/components/call-history/CallHistoryOutgoing';
 import CallDatabse from '@/components/call-database/CallDatabase';
+import Report from '@/components/report/Report';
 
 Vue.use(Router);
 
@@ -29,6 +30,11 @@ export const router = new Router({
             name: 'CallDatabase',
             path: '/call-data',
             component: CallDatabse,
+        },
+        {
+            name: 'Report',
+            path: '/report',
+            component: Report,
         },
         // otherwise redirect to home
         { path: '*', redirect: '/' }
