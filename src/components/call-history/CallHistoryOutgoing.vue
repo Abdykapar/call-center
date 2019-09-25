@@ -36,7 +36,7 @@
               </div>
               <div>
                 <label>Школа № </label>
-                <input v-model="person.schoolTitle">
+                <input v-model="person.schoolTitle" disabled>
               </div>
             </div>
 
@@ -69,11 +69,11 @@
                 <label>
                   Район
                 </label>
-                <input v-model="school.rayon.title">
+                <input v-model="school.rayon.title" disabled>
               </div>
               <div>
                 <label>Регион</label>
-                <input v-model="school.region.title">
+                <input v-model="school.region.title" disabled>
               </div>
             </div>
           </form>
@@ -218,6 +218,25 @@ export default {
                 this.validPhone = true;
             } else {
                 this.validPhone = false;
+                if (e.target.value.length === 0)
+                {
+                    this.person = {
+                        name: '',
+                        surname: '',
+                        patronymic: '',
+                        schoolTitle: '',
+                        extraPhone: '',
+                    };
+                    this.school = {
+                        rayon: {
+                            title: '',
+                        },
+                        region: {
+                            title: '',
+                        }
+                    };
+                    this.data = [];
+                }
                 if (e.target.value.length >= 1)
                 {
                     this.fetchPersonWithPhone(this.phone);

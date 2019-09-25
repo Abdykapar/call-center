@@ -35,8 +35,12 @@
                 <input v-model="person.patronymic">
               </div>
               <div>
-                <label>Школа № </label>
-                <input v-model="person.schoolTitle">
+                <label>Статус</label>
+                <select v-model="person.personType">
+                  <option v-for="type in parentType" :key="type.id" :value="type.id">
+                    {{ type.name }}
+                  </option>
+                </select>
               </div>
             </div>
 
@@ -45,14 +49,7 @@
                 <label>Дополнительный номер</label>
                 <input v-model="person.extraPhone">
               </div>
-              <div>
-                <label>Статус</label>
-                <select v-model="person.personType">
-                  <option v-for="type in parentType" :key="type.id" :value="type.id">
-                    {{ type.name }}
-                  </option>
-                </select>
-              </div>
+
               <div>
                 <label>Дата</label>
                 <a-date-picker
@@ -64,14 +61,33 @@
                 </a-date-picker>
               </div>
               <div>
+                <label>Регион</label>
+                <input v-if="school.region.title" v-model="school.region.title" disabled>
+                <select v-else v-model="school.region.id" @change="fetchRayon(school.region.id)">
+                  <option v-for="region in regions" :key="region.id" :value="region.id">
+                      {{ region.title }}
+                  </option>
+                </select>
+              </div>
+              <div>
                 <label>
                   Район
                 </label>
-                <input v-model="school.rayon.title">
+                <input v-if="school.rayon.title" v-model="school.rayon.title" disabled>
+                <select v-else v-model="school.rayon.id" @change="fetchSchools(school.rayon.id)">
+                    <option v-for="rayon in rayons" :key="rayon.id" :value="rayon.id">
+                        {{ rayon.title }}
+                    </option>
+                </select>
               </div>
               <div>
-                <label>Регион</label>
-                <input v-model="school.region.title">
+                <label>Школа № </label>
+                <input v-if="person.schoolTitle" v-model="person.schoolTitle" disabled>
+                <select v-else v-model="person.schoolId">
+                  <option v-for="school in schools" :key="school.id" :value="school.id">
+                    {{ school.name }}
+                  </option>
+                </select>
               </div>
             </div>
           </form>
@@ -97,10 +113,11 @@
         />
       </div>
       <div v-if="showNewQuestion">
-        <CallNewQuestion v-if="renderComponent"
-          :person="person"
-          :call-type="callType"
-                         :update-or-not="updateQuestionary"
+        <CallNewQuestion
+                v-if="renderComponent"
+                :person="personChanged"
+                :call-type="callType"
+                :update-or-not="updateQuestionary"
         />
       </div>
       <div v-if="showInfoClient">
@@ -115,6 +132,7 @@
 </template>
 
 <script>
+import { locationService } from '@/_services/location/location.service';
 import { questionaryService } from '@/_services/questionary.service';
 import Header from '@/components/header/Header';
 import CallHistoryTable from '@/components/call-history/CallHistoryTable';
@@ -146,13 +164,16 @@ export default {
                 repliedAt:'',
                 extraPhone:'',
                 personType:1,
+                schoolId: null,
             },
             dateNow:moment(),
             school: {
                 rayon: {
+                    id: null,
                     title: '',
                 },
                 region: {
+                    id: null,
                     title: '',
                 }
             },
@@ -183,10 +204,20 @@ export default {
                     totalPages: 0,
                 }
             },
+            regions: [],
+            rayons: [],
+            schools: [],
         };
+    },
+    computed: {
+        personChanged: function () {
+            this.person.repliedAt= moment(this.dateNow).format('DD.MM.YYYY HH:mm');
+            return this.person;
+        },
     },
     created () {
         this.checkCallType();
+        this.fetchRegions();
     },
     methods: {
         checkPhone (e)
@@ -224,7 +255,6 @@ export default {
                             this.person.repliedAt = '';
                             this.person.extraPhone = '';
                             this.fetchSchool(res.schoolId);
-                            this.updateQuestionary = false;
                         }
                         else {
                             this.person = {
@@ -257,6 +287,7 @@ export default {
                 if (res)
                 {
                     this.school = res;
+                    console.log(res);
                 }
                 else {
                     this.school = {
@@ -338,6 +369,27 @@ export default {
                 else { this.data = []; }
                 this.pageData = res;
             }).catch(err => console.log(err));
+        },
+        fetchRegions ()
+        {
+            locationService.getRegions().then(res => {
+                if (res)
+                {
+                    this.regions = res.content;
+                } else { this.regions = []; }
+            }).catch(err => console.log(err));
+        },
+        fetchRayon (id)
+        {
+            locationService.getRayonByRegion(id).then(res => {
+                this.rayons = res;
+            }).catch(err => console.log(err));
+        },
+        fetchSchools (id)
+        {
+            schoolService.getByRayon(id).then(res => {
+                this.schools = res;
+            }).catch(err => console.log(err));
         }
     },
 
@@ -413,6 +465,9 @@ export default {
         }
         .column-two{
           width: 60%;
+          select {
+              width: 40%;
+          }
             label{
                 width: 200px;
                 padding-right: 5px;
@@ -465,4 +520,11 @@ export default {
       background-color: #ee7739 !important;
       color: white!important;
     }
+  .white-label{
+    height: 29px;
+    background-color: #ffffff;
+    width: 262.9px;
+    text-align: center;
+
+  }
 </style>

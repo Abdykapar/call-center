@@ -37,13 +37,13 @@
         <textarea v-model="updatedData.comment">
         </textarea>
       </div>
-      <div class="database-check">
-        <label>Предложить вопрос в Базу знаний</label>
-        <input
-          v-model="dataCheck"
-          type="checkbox"
-        >
-      </div>
+<!--      <div class="database-check">-->
+<!--        <label>Предложить вопрос в Базу знаний</label>-->
+<!--        <input-->
+<!--          v-model="dataCheck"-->
+<!--          type="checkbox"-->
+<!--        >-->
+<!--      </div>-->
       <div>
         <button @click.prevent="saveWithAnswer()">
           Ответ дан
@@ -70,7 +70,7 @@ export default {
                 callType: '',
                 comment: '',
                 question: '',
-                questionCategoryId: '',
+                categoryId: '',
                 repliedAt: '',
                 extraPhone: '',
                 firstName: '',
@@ -80,6 +80,7 @@ export default {
                 phone:'',
                 schoolId: '',
                 replied: null,
+                questionCategoryId: 0,
             },
             dataCheck: false,
             submitted: false,
@@ -90,6 +91,11 @@ export default {
     },
     computed: {
         updatedData: function () {
+            if (!this.updateOrNot)
+            {
+                return this.questionary;
+            }
+            console.log(this.data);
             return this.data;
         },
     },
@@ -99,7 +105,7 @@ export default {
     methods: {
         saveWithAnswer ()
         {
-            if (this.updatedData.answer.length)
+            if (this.updatedData.answer && this.updatedData.answer.length)
             {
                 this.questionary.replied = true;
                 this.saveQuestionary();
@@ -122,24 +128,23 @@ export default {
             this.submitted = true;
             this.$validator.validate().then(valid => {
                 if (valid) {
+                    this.questionary.repliedAt = this.person.repliedAt;
+                    this.questionary.extraPhone = this.person.extraPhone;
+                    this.questionary.personType = this.person.personType;
+                    this.questionary.firstName = this.person.name;
+                    this.questionary.lastName = this.person.surname;
+                    this.questionary.middleName = this.person.patronymic;
+                    this.questionary.phone = this.person.phone;
+                    this.questionary.schoolId = this.person.schoolId;
+                    this.questionary.callType = this.callType;
                     if (this.updateOrNot)
                     {
-                        this.questionary = {
-                            answer: this.updatedData.answer,
-                            callType: this.updatedData.callType,
-                            comment: this.updatedData.comment,
-                            question: this.updatedData.question,
-                            questionCategoryId: this.updatedData.categoryId,
-                            phone:this.updatedData.phone,
-                            schoolId: this.updatedData.schoolId,
-                            id: this.updatedData.uuid,
-                        };
-                        this.questionary.repliedAt = this.person.repliedAt;
-                        this.questionary.extraPhone = this.person.extraPhone;
-                        this.questionary.personType = this.person.personType;
-                        this.questionary.firstName = this.person.name;
-                        this.questionary.lastName = this.person.surname;
-                        this.questionary.middleName = this.person.patronymic;
+                        this.questionary.answer = this.updatedData.answer;
+                        this.questionary.comment = this.updatedData.comment;
+                        this.questionary.question = this.updatedData.question;
+                        this.questionary.questionCategoryId = this.updatedData.categoryId;
+                        this.questionary.id = this.updatedData.uuid;
+                        console.log(this.questionary);
                         questionaryService.update(this.questionary).then(res => {
                             this.$toaster.success(res.message, { timeout:2000 });
                         }).catch(err => {
@@ -148,7 +153,14 @@ export default {
                         });
                     }
                     else {
-                        this.$toaster.error('Nothing to answer');
+                        this.questionary.answer = this.updatedData.answer;
+                        this.questionary.comment = this.updatedData.comment;
+                        this.questionary.question = this.updatedData.question;
+                        this.questionary.questionCategoryId = this.updatedData.categoryId;
+                        console.log(this.questionary);
+                        questionaryService.create(this.questionary).then(res => {
+                            this.$toaster.success(res.message, { timeout:2000 });
+                        }).catch(err => console.log(err));
                     }
 
                 }

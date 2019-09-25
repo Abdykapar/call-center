@@ -4,6 +4,7 @@ import config from 'config';
 
 export const schoolService = {
     getById,
+    getByRayon,
 };
 
 
@@ -16,6 +17,14 @@ function getById (id) {
     return fetch(`${config.apiUrl}/school/${id}`, requestOptions).then(handleResponse);
 }
 
+function getByRayon (id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(`${config.apiUrl}/school/get?rayon_id=${id}`, requestOptions).then(handleResponse);
+}
 
 function handleResponse (response)
 {

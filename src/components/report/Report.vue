@@ -1,45 +1,77 @@
 <template>
-    <div class="report-container">
-        <div class="report-header">
-            <button @click="exportToExcel('tblexportData')">
-                <img src="/static/images/report/icons8-curved-arrow-240@3x.png">
-                Export File
-            </button>
-            <div class="report-header-item">
-                <label>Start Date: </label>
-                <a-date-picker v-model="startDate" format="LL" @change="fetchQuestionary"></a-date-picker>
-            </div>
-            <div class="report-header-item">
-                <label>End Date: </label>
-                <a-date-picker v-model="endDate" format="LL" @change="fetchQuestionary"></a-date-picker>
-            </div>
-        </div>
-        <div class="report-table">
-            <a-table :columns="columns" :dataSource="questionaries" @change="onChange" :pagination="false" bordered id="tblexportData">
-                <template slot="lastName" slot-scope="text, record">
-                    {{record.firstName}} {{record.lastName}}
-                </template>
-                <template slot="replied" slot-scope="text">
-                    <span v-if="text === 1">+</span>
-                    <span v-else>-</span>
-                </template>
-                <template slot="personType" slot-scope="text">
-                    <span v-if="text === 1">Родитель</span>
-                    <span v-else-if="text === 2">Ученик</span>
-                    <span v-else>Другой</span>
-                </template>
-            </a-table>
-        </div>
+  <div class="report-container">
+    <div class="report-header">
+      <button @click="exportToExcel('tblexportData')">
+        <img src="/static/images/report/icons8-curved-arrow-240@3x.png">
+        Export File
+      </button>
+      <div class="report-header-item">
+        <label>Start Date: </label>
+        <a-date-picker
+          v-model="startDate"
+          format="LL"
+          @change="fetchQuestionary"></a-date-picker>
+      </div>
+      <div class="report-header-item">
+        <label>End Date: </label>
+        <a-date-picker
+          v-model="endDate"
+          format="LL"
+          @change="fetchQuestionary"></a-date-picker>
+      </div>
     </div>
+    <div class="report-table">
+      <a-table
+        id="tblexportData"
+        :columns="columns"
+        :data-source="questionaries"
+        :pagination="false"
+        bordered
+        @change="onChange"
+      >
+        <template
+          slot="lastName"
+          slot-scope="text, record"
+        >
+          {{ record.firstName }} {{ record.lastName }}
+        </template>
+        <template
+          slot="replied"
+          slot-scope="text"
+        >
+          <span v-if="text === 1">
+            +
+          </span>
+          <span v-else>
+            -
+          </span>
+        </template>
+        <template
+          slot="personType"
+          slot-scope="text"
+        >
+          <span v-if="text === 1">
+            Родитель
+          </span>
+          <span v-else-if="text === 2">
+            Ученик
+          </span>
+          <span v-else>
+            Другой
+          </span>
+        </template>
+      </a-table>
+    </div>
+  </div>
 </template>
 
 
 <script>
-    import { questionaryService } from '@/_services/questionary.service';
+import { questionaryService } from '@/_services/questionary.service';
 
-    import moment from 'moment';
-    const columns = [
-        {
+import moment from 'moment';
+const columns = [
+    {
         title: 'Дата и Время',
         dataIndex: 'repliedAt',
         key: 'repliedAt',
@@ -48,13 +80,13 @@
         title: 'Категория вопроса',
         dataIndex: 'categoryTitle',
         key: 'categoryTitle',
-        filters: [{
+        filters: [ {
             text: 'технический вопрос',
             value: 'технический вопрос',
         }, {
             text: 'пароль и логин',
             value: 'пароль и логин',
-        }],
+        } ],
         filterMultiple: true,
         onFilter: (value, record) => record.categoryTitle.indexOf(value) === 0,
         sorter: (a, b) => a.categoryTitle < b.categoryTitle ? -1 : a.categoryTitle > b.categoryTitle ? 1 : 0,
@@ -93,13 +125,13 @@
         dataIndex: 'replied',
         key: 'replied',
         sorter: (a, b) => a.replied < b.replied ? -1 : a.replied > b.replied ? 1 : 0,
-        filters: [{
+        filters: [ {
             text: '+',
             value: '1',
         }, {
             text: '-',
             value: '2',
-        }],
+        } ],
         filterMultiple: true,
         onFilter: (value, record) => record.replied == value,
         scopedSlots: { customRender: 'replied' },
@@ -114,118 +146,118 @@
         dataIndex: 'schoolName',
         key: 'schoolName',
         sorter: (a, b) => a.schoolName < b.schoolName ? -1 : a.schoolName > b.schoolName ? 1 : 0,
-    }];
-    let filteredData=[];
-    function onChange( pagination, filters, sorter, sourceData) {
-        filteredData = sourceData;
-        console.log('params', pagination, filters, sorter, sourceData);
-    }
+    } ];
+let filteredData=[];
+function onChange ( pagination, filters, sorter, sourceData) {
+    filteredData = sourceData;
+    console.log('params', pagination, filters, sorter, sourceData);
+}
 
 
-    export default {
-        name: 'report',
-        components: {
-            // downloadExcel
-        },
-        data() {
-            return {
-                columns,
-                filteredData,
-                questionaries: [],
-                startDate: null,
-                endDate: null,
-                json_fields: {
-                    'Дата и Время': 'repliedAt',
-                    'Категория вопроса': 'categoryTitle',
-                    'Имя': 'firstName',
-                    'Фамилия': 'lastName',
-                    'Телефон': 'phone',
-                    'Доп. номер': 'extraPhone',
-                    'Вопрос': 'question',
-                    'Ответ': 'answer',
-                    'Комментарий': 'comment',
-                    'Ответ дан': {
-                        field: 'replied',
-                        callback: (value) => {
-                            return value === 1 ? '+' : '-';
-                        }
-                    },
-                    'Статус': {
-                        field: 'personType',
-                        callback: (value) => {
-                            return value === 1 ? 'Родитель' : value === 2 ? 'Ученик' : 'Другой';
-                        }
-                    },
-                    'Школа': 'schoolName',
+export default {
+    name: 'Report',
+    components: {
+        // downloadExcel
+    },
+    data () {
+        return {
+            columns,
+            filteredData,
+            questionaries: [],
+            startDate: null,
+            endDate: null,
+            json_fields: {
+                'Дата и Время': 'repliedAt',
+                'Категория вопроса': 'categoryTitle',
+                'Имя': 'firstName',
+                'Фамилия': 'lastName',
+                'Телефон': 'phone',
+                'Доп. номер': 'extraPhone',
+                'Вопрос': 'question',
+                'Ответ': 'answer',
+                'Комментарий': 'comment',
+                'Ответ дан': {
+                    field: 'replied',
+                    callback: (value) => {
+                        return value === 1 ? '+' : '-';
+                    }
                 },
-                json_meta: [
-                    [
-                        {
-                            key: 'charset',
-                            value: 'utf-8',
-                        },
-                    ],
-                ]
-            }
-        },
-        created ()
-        {
-            this.fetchQuestionary();
-        },
-        methods: {
-            onChange,
-            fetchQuestionary ()
-            {
-                questionaryService.getList().then(res => {
-                    if(this.startDate !== null && this.endDate !== null)
-                    {
-                        this.questionaries = res.filter(question => moment(question.repliedAt,'DD.MM.YYYY HH:mm') >= this.startDate && moment(question.repliedAt,'DD.MM.YYYY HH:mm') <= this.endDate);
+                'Статус': {
+                    field: 'personType',
+                    callback: (value) => {
+                        return value === 1 ? 'Родитель' : value === 2 ? 'Ученик' : 'Другой';
                     }
-                    else if (this.startDate !== null)
-                    {
-                        this.questionaries = res.filter(question => moment(question.repliedAt,'DD.MM.YYYY HH:mm') >= this.startDate);
-                    }
-                    else if(this.endDate !== null)
-                    {
-                        this.questionaries = res.filter(question => moment(question.repliedAt,'DD.MM.YYYY HH:mm') <= this.endDate);
-                    }
-                    else
-                        this.questionaries = res;
-                    this.filteredData = this.questionaries;
-                }).catch(err => console.log(err));
+                },
+                'Школа': 'schoolName',
             },
-            exportToExcel(tableID, filename = ''){
-                var downloadurl;
-                var dataFileType = 'application/vnd.ms-excel';
-                var tableSelect = document.getElementById(tableID);
-                var tableHTMLData = tableSelect.outerHTML.replace(/ /g, '%20');
-
-                // Specify file name
-                filename = filename?filename+'.xls':'export_excel_data.xls';
-
-                // Create download link element
-                downloadurl = document.createElement("a");
-
-                document.body.appendChild(downloadurl);
-
-                if(navigator.msSaveOrOpenBlob){
-                    var blob = new Blob(['\ufeff', tableHTMLData], {
-                        type: dataFileType
-                    });
-                    navigator.msSaveOrOpenBlob( blob, filename);
-                }else{
-                    // Create a link to the file
-                    downloadurl.href = 'data:' + dataFileType + ', ' + tableHTMLData;
-
-                    // Setting the file name
-                    downloadurl.download = filename;
-
-                    //triggering the function
-                    downloadurl.click();
+            json_meta: [
+                [
+                    {
+                        key: 'charset',
+                        value: 'utf-8',
+                    },
+                ],
+            ]
+        };
+    },
+    created ()
+    {
+        this.fetchQuestionary();
+    },
+    methods: {
+        onChange,
+        fetchQuestionary ()
+        {
+            questionaryService.getList().then(res => {
+                if (this.startDate !== null && this.endDate !== null)
+                {
+                    this.questionaries = res.filter(question => moment(question.repliedAt,'DD.MM.YYYY HH:mm') >= this.startDate && moment(question.repliedAt,'DD.MM.YYYY HH:mm') <= this.endDate);
                 }
+                else if (this.startDate !== null)
+                {
+                    this.questionaries = res.filter(question => moment(question.repliedAt,'DD.MM.YYYY HH:mm') >= this.startDate);
+                }
+                else if (this.endDate !== null)
+                {
+                    this.questionaries = res.filter(question => moment(question.repliedAt,'DD.MM.YYYY HH:mm') <= this.endDate);
+                }
+                else
+                {this.questionaries = res;}
+                this.filteredData = this.questionaries;
+            }).catch(err => console.log(err));
+        },
+        exportToExcel (tableID, filename = ''){
+            let downloadurl;
+            const dataFileType = 'application/vnd.ms-excel';
+            const tableSelect = document.getElementById(tableID);
+            const tableHTMLData = tableSelect.outerHTML.replace(/ /g, '%20');
+
+            // Specify file name
+            filename = filename?filename+'.xls':'export_excel_data.xls';
+
+            // Create download link element
+            downloadurl = document.createElement('a');
+
+            document.body.appendChild(downloadurl);
+
+            if (navigator.msSaveOrOpenBlob){
+                const blob = new Blob([ '\ufeff', tableHTMLData ], {
+                    type: dataFileType
+                });
+                navigator.msSaveOrOpenBlob( blob, filename);
+            } else {
+                // Create a link to the file
+                downloadurl.href = 'data:' + dataFileType + ', ' + tableHTMLData;
+
+                // Setting the file name
+                downloadurl.download = filename;
+
+                //triggering the function
+                downloadurl.click();
             }
         }
     }
+};
 </script>
 <style lang="scss" scoped>
     .report-container{
