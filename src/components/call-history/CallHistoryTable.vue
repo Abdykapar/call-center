@@ -1,5 +1,6 @@
 <template>
   <div class="call-history">
+    <pre-loader :show="loading"></pre-loader>
     <table>
       <thead>
         <tr>
@@ -46,14 +47,17 @@
 <script>
 import { questionaryService } from '@/_services/questionary.service';
 import Pagination from '@/components/pagination/Pagination';
+import PreLoader from '@/components/preloader/PreLoader';
 export default {
     name: 'CallHistoryTable',
     components: {
-        Pagination
+        Pagination,
+        PreLoader,
     },
     props: [ 'data', 'pageData', 'phone', 'callType' ],
     data () {
         return {
+            loading: false,
             currentPage: 0,
             totalPages: 0,
             pageSize: 0,
@@ -78,6 +82,7 @@ export default {
         },
         fetchPages (page, size)
         {
+            // this.loading = true;
             questionaryService.getByPhone(this.phone, page, size).then(res => {
                 if (res['_embedded'])
                 {
@@ -87,7 +92,11 @@ export default {
                 this.currentPage = res.page.number;
                 this.totalPages = res.page.totalPages;
                 this.pageSize = res.page.size;
-            }).catch(err => console.log(err));
+                // this.loading = false;
+            }).catch(err => {
+                console.log(err);
+                this.loading = false;
+            });
         },
         changePage (page, size) {
             this.fetchPages(page, size);

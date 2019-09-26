@@ -1,5 +1,6 @@
 <template>
   <div class="call-center-home">
+      <pre-loader :show="loading"></pre-loader>
     <call-center-header />
     <div class="home-content">
       <a-table :columns="columns" :dataSource="questionaries" @change="onChange" bordered>
@@ -56,6 +57,7 @@
 <script>
 import { questionaryService } from '@/_services/questionary.service';
 import Header from '@/components/header/Header';
+import PreLoader from '@/components/preloader/PreLoader';
 const columns = [ {
     slots: { title:'callTitle' },
     dataIndex: 'callType',
@@ -109,10 +111,12 @@ export default {
     name: 'Home',
     components: {
         'call-center-header': Header,
+        PreLoader,
     },
     data () {
         return {
             columns,
+            loading: false,
             questionaries: [],
             data: [],
             showQuestionary: false,
@@ -128,9 +132,14 @@ export default {
         onChange,
         fetchQuestionaries ()
         {
+            this.loading = true;
             questionaryService.getByNotReplied().then(res => {
                 this.questionaries = res;
-            }).catch(err => console.log(err));
+                this.loading = false;
+            }).catch(err => {
+                console.log(err);
+                this.loading = false;
+            });
         },
 
     }

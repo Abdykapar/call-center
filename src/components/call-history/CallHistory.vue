@@ -1,5 +1,6 @@
 <template>
   <div class="call-history-container">
+    <pre-loader :show="loading"></pre-loader>
     <CallCenterHeader />
     <div class="call-history-content">
       <div class="call-history-profile">
@@ -141,7 +142,7 @@ import CallClientInfo from '@/components/call-history/CallClientInfo';
 import { personService } from '@/_services/person.service';
 import { schoolService } from '@/_services/school.service';
 import moment from 'moment';
-
+import PreLoader from '@/components/preloader/PreLoader';
 moment.locale('ru');
 
 export default {
@@ -151,10 +152,12 @@ export default {
         CallHistoryTable,
         CallNewQuestion,
         CallClientInfo,
+        PreLoader,
     },
     data ()
     {
         return {
+            loading: false,
             showCallHistoryTable: true,
             showNewQuestion: false,
             showInfoClient: false,
@@ -222,6 +225,7 @@ export default {
     methods: {
         checkPhone (e)
         {
+            this.loading = true;
             if (isNaN(e.target.value)){
                 this.validPhone = true;
             } else {
@@ -255,6 +259,7 @@ export default {
                             this.person.repliedAt = '';
                             this.person.extraPhone = '';
                             this.fetchSchool(res.schoolId);
+                            this.loading = false;
                         }
                         else {
                             this.person = {
@@ -268,6 +273,7 @@ export default {
                             };
                             this.school.region.title = '';
                             this.school.rayon.title = '';
+                            this.loading = false;
                         }
                     }).then(() => {
                         if (this.showCallHistoryTable)

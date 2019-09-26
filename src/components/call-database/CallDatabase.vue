@@ -1,5 +1,6 @@
 <template>
   <div class="call-center-home">
+      <pre-loader :show="loading"></pre-loader>
     <call-center-header></call-center-header>
     <div class="home-content">
       <table>
@@ -45,14 +46,17 @@
 import Header from '@/components/header/Header';
 import { questionaryService } from '@/_services/questionary.service';
 import Pagination from '@/components/pagination/Pagination';
+import PreLoader from '@/components/preloader/PreLoader';
 export default {
     name: 'CallDatabase',
     components: {
         'call-center-header': Header,
         Pagination,
+        PreLoader,
     },
     data () {
         return {
+            loading: false,
             questions: [],
             currentPage:0,
             totalPages:0,
@@ -66,6 +70,7 @@ export default {
     methods: {
         fetchQuestions ()
         {
+            this.loading = true;
             questionaryService.getAll().then(res => {
                 if (res['_embedded']['questionaryResourceList'])
                 {
@@ -76,11 +81,16 @@ export default {
                     this.currentPage = res.page.number;
                     this.totalPages = res.page.totalPages;
                     this.pageSize = res.page.size;
+                    this.loading = false;
                 }
-            }).catch(err => console.log(err));
+            }).catch(err => {
+                console.log(err);
+                this.loading = false;
+            });
         },
         fetchPages (page, size)
         {
+            this.loading = true;
             questionaryService.getAll(page, size).then(res => {
                 if (res['_embedded']['questionaryResourceList'])
                 {
@@ -92,11 +102,14 @@ export default {
                     this.totalPages = res.page.totalPages;
                     this.pageSize = res.page.size;
                 }
-            }).catch(err => console.log(err));
+                this.loading = false;
+            }).catch(err => {
+                console.log(err);
+                this.loading = false;
+            });
         },
         changePage (page, size)
         {
-            console.log('comes');
             this.fetchPages(page, size);
         },
     }
