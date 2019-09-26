@@ -3,25 +3,25 @@
     <div class="client-info-call-center">
       <div class="column-left">
         <div class="item">
-          <label>ФИО</label>
+          <label>{{ $lang.words.fullName }}</label>
           <div class="info">
             <span>{{ person.name }} {{ person.surname }} {{ person.patronymic }}</span>
           </div>
         </div>
         <div class="item">
-          <label>Телефон</label>
+          <label>{{ $lang.words.phone }}</label>
           <div class="info">
             <span>{{ person.phone }}</span>
           </div>
         </div>
         <div class="item">
-          <label>Школа №</label>
+          <label>{{ $lang.words.school }} №</label>
           <div class="info">
             <span>{{ person.schoolTitle }}</span>
           </div>
         </div>
         <div class="item">
-          <label>Регион</label>
+          <label>{{ $lang.words.region }}</label>
           <div class="info">
             <span>{{ school.region.title }}</span>
           </div>
@@ -29,19 +29,19 @@
       </div>
       <div class="column-right">
         <div class="item">
-          <label>Адрес</label>
+          <label>{{ $lang.words.address }}</label>
           <div class="info">
             <span>{{ person.address }}</span>
           </div>
         </div>
         <div class="item">
-          <label>Position</label>
+          <label>{{ $lang.words.position }}</label>
           <div class="info">
             <span>{{ person.position }}</span>
           </div>
         </div>
         <div class="item">
-          <label>Район</label>
+          <label>{{ $lang.words.rayon }}</label>
           <div class="info">
             <span>{{ school.rayon.title }}</span>
           </div>

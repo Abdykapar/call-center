@@ -42,4 +42,6 @@ module.exports = {
     operatorComment: 'Оператордун комменти',
     notAnswered: 'Жооп берилген жок',
     error: 'Что-то пошло не так',
+    address: 'Адрес',
+    position: 'Должность'
 };

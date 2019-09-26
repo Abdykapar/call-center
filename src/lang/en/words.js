@@ -42,4 +42,6 @@ module.exports = {
     operatorComment: 'Operator comment',
     notAnswered: 'Answer not given',
     error: 'Something went wrong',
+    address: 'Address',
+    position: 'Position',
 };
