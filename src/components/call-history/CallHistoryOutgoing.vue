@@ -4,13 +4,13 @@
     <div class="call-history-content">
       <div class="call-history-profile">
         <div class="profile-header">
-          <span>Анкетная часть</span>
+          <span>{{ $lang.words.questionnaire }}</span>
         </div>
         <div class="call-history-form">
           <form @submit.prevent="saveData">
             <div class="column-one">
               <div>
-                <label>Телефон</label>
+                <label>{{ $lang.words.phone }}</label>
                 <input
                   v-model="phone"
                   v-validate="'required'"
@@ -23,56 +23,56 @@
                 >
               </div>
               <div>
-                <label>Имя</label>
+                <label>{{ $lang.words.name }}</label>
                 <input v-model="person.name">
               </div>
               <div>
-                <label>Фамилия</label>
+                <label>{{ $lang.words.surname }}</label>
                 <input v-model="person.surname">
               </div>
               <div>
-                <label>Отчество</label>
+                <label>{{ $lang.words.lastName }}</label>
                 <input v-model="person.patronymic">
               </div>
               <div>
-                <label>Школа № </label>
+                <label>{{ $lang.words.school }} № </label>
                 <input v-model="person.schoolTitle" disabled>
               </div>
             </div>
 
             <div class="column-two">
               <div>
-                <label>Дополнительный номер</label>
+                <label>{{ $lang.words.extraPhone }}</label>
                 <input v-model="person.extraPhone">
               </div>
               <div>
-                <label>Статус</label>
+                <label>{{ $lang.words.status }}</label>
                 <select v-model="person.personType">
                   <option
                     v-for="type in parentType"
                     :key="type.id"
                     :value="type.id"
                   >
-                    {{ type.name }}
+                    {{ $lang.words[type.name] }}
                   </option>
                 </select>
               </div>
               <div>
-                <label>Дата</label>
+                <label>{{ $lang.words.date }}</label>
                 <a-date-picker
                   v-model="dateNow"
                   show-time
                   format="YYYY-MM-DD HH:mm"
-                  placeholder="Выберите дату"></a-date-picker>
+                  :placeholder="$lang.words.chooseDate"></a-date-picker>
               </div>
               <div>
                 <label>
-                  Район
+                  {{ $lang.words.rayon }}
                 </label>
                 <input v-model="school.rayon.title" disabled>
               </div>
               <div>
-                <label>Регион</label>
+                <label>{{ $lang.words.region }}</label>
                 <input v-model="school.region.title" disabled>
               </div>
             </div>
@@ -81,13 +81,13 @@
       </div>
       <div class="call-history-buttons">
         <button @click="showHistory" :class="{ 'active-button' : showCallHistoryTable }">
-          История Обращений
+          {{ $lang.words.historyAppeals }}
         </button>
         <button @click="showQuestion" :class="{ 'active-button' : showNewQuestion }">
-          Ответить на вопрос
+          {{ $lang.words.answerQuestion }}
         </button>
         <button @click="showClient" :class="{ 'active-button' : showInfoClient }">
-          Информация о Клиенте
+          {{ $lang.words.customerInfo }}
         </button>
       </div>
       <div v-if="showCallHistoryTable">
@@ -174,15 +174,15 @@ export default {
             parentType: [
                 {
                     id:1,
-                    name: 'Родитель',
+                    name: 'parent',
                 },
                 {
                     id:2,
-                    name: 'Ученик',
+                    name: 'student',
                 },
                 {
                     id:3,
-                    name: 'Другой',
+                    name: 'other',
                 }
             ],
             renderComponent: true,

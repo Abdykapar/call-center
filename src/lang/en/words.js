@@ -44,4 +44,5 @@ module.exports = {
     error: 'Something went wrong',
     address: 'Address',
     position: 'Position',
+    answerQuestion: 'Answer the question',
 };

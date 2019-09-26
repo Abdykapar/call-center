@@ -43,5 +43,6 @@ module.exports = {
     notAnswered: 'Жооп берилген жок',
     error: 'Что-то пошло не так',
     address: 'Адрес',
-    position: 'Должность'
+    position: 'Должность',
+    answerQuestion: 'Суроого жооп берүү',
 };

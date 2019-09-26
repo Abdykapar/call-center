@@ -43,5 +43,6 @@ module.exports = {
     notAnswered: 'Ответ не дан',
     error: 'Что-то пошло не так',
     address: 'Адрес',
-    position: 'Должность'
+    position: 'Должность',
+    answerQuestion: 'Ответить на вопрос',
 };
