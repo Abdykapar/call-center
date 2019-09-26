@@ -422,7 +422,7 @@ export default {
         form{
             display: flex;
             label{
-                min-width: 100px;
+                min-width: 120px;
                 text-align: right;
                 padding-right: 10px;
                 font-size: 16px;
@@ -437,7 +437,7 @@ export default {
                 height: 29px!important;
             }
             input{
-                width: 70%;
+                width: 60%;
                 height: 29px;
                 background-color: #ffffff;
                 padding-left: 10px;
@@ -494,7 +494,7 @@ export default {
     .call-history-buttons{
         margin: 30px 6%;
         button{
-            width: 220.9px;
+            width: 250px;
             height: 48px;
             background-color: #ffffff;
             font-size: 18px;

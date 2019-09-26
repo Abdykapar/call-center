@@ -2,6 +2,21 @@
   <div class="call-center-header">
     <div class="top-menu">
       <div class="top-menu-items">
+        <div class="top-menu-language">
+          <select
+            class="select_lang"
+            v-model="currentLang.code"
+            @change="changeLang"
+          >
+            <option
+              v-for="(lang, index) in locales"
+              :key="index"
+              :value="lang.code"
+            >
+              {{ lang.title }}
+            </option>
+          </select>
+        </div>
         <div
           class="top-menu-main"
           @click="goHome"
@@ -22,25 +37,30 @@
         </div>
       </div>
     </div>
-    <div class="divider"></div>
+    <div class="divider" />
     <div class="header-nav-bar">
       <span :class="{'active': url.includes('/call-data')}">
         <router-link :to="{ name: 'CallDatabase' }">
-            <img v-if="$route.path !== '/call-data'" src="/static/images/header/books-stack-of-three%20(1)@3x.png">
-            <img v-else src="/static/images/header/book-red.png">
-            {{ $lang.words.knowledgeBase }}
+          <img
+            v-if="$route.path !== '/call-data'"
+            src="/static/images/header/books-stack-of-three%20(1)@3x.png"
+          >
+          <img
+            v-else
+            src="/static/images/header/book-red.png"
+          >
+          {{ $lang.words.knowledgeBase }}
         </router-link>
-
       </span>
       <span :class="{'active': $route.path === '/call-history-outgoing'}">
         <router-link :to="{ name: 'CallHistoryOutgoing' }">
           <img
-                  v-if="$route.path === '/call-history-outgoing'"
-                  src="/static/images/header/phone-red.png"
+            v-if="$route.path === '/call-history-outgoing'"
+            src="/static/images/header/phone-red.png"
           >
           <img
-                  v-else
-                  src="/static/images/header/incoming-call@3x.png"
+            v-else
+            src="/static/images/header/incoming-call@3x.png"
           >
           {{ $lang.words.outgoingCall }}
         </router-link>
@@ -64,15 +84,35 @@
 
 <script>
 import { mapActions } from 'vuex';
+import { customEventEmitter } from '@/_helpers/customEventEmitter';
+
 export default {
     name: 'Header',
     data () {
         return {
             url: '',
+            currentLang: {
+                code:'',
+            },
+            locales: [
+                {
+                    title: 'Русский',
+                    code: 'ru'
+                },
+                {
+                    title: 'Кыргызча',
+                    code: 'kg'
+                },
+                {
+                    title: 'English',
+                    code: 'en'
+                }
+            ],
         };
     },
     created () {
         this.activePath();
+        this.currentLang.code = this.$lang.getLang();
     },
     methods: {
         ...mapActions('account',[ 'logout' ]),
@@ -83,6 +123,11 @@ export default {
         goHome ()
         {
             this.$router.push('/');
+        },
+        changeLang (e) {
+            this.$lang.setLang(e.currentTarget.value);
+            customEventEmitter.$emit('langChange');
+            this.currentLang.code = this.$lang.getLang();
         },
     }
 };
@@ -102,13 +147,13 @@ export default {
             float: right;
         }
         .top-menu-main{
+            width: 100%;
             display: flex;
             height: 37px;
             border-radius: 0 0 20px 20px;
             border: solid 4px #ee7739;
             border-top: 0;
             span{
-                width: 100%;
                 font-family: Helvetica;
                 font-size: 18px;
                 font-weight: bold;
@@ -181,5 +226,16 @@ export default {
     }
     .md-theme-default a:not(.md-button){
         text-decoration: none;
+    }
+    .top-menu-language{
+        margin-right: 40px;
+        margin-top: 8px;
+        select{
+          width: 106.9px;
+          height: 20px;
+          background-color: white;
+          border: none;
+          text-align-last: center;
+        }
     }
 </style>

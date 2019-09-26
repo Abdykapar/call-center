@@ -56,7 +56,6 @@
 <script>
 import { questionaryService } from '@/_services/questionary.service';
 import Header from '@/components/header/Header';
-import Pagination from '@/components/pagination/Pagination';
 const columns = [ {
     slots: { title:'callTitle' },
     dataIndex: 'callType',
@@ -110,7 +109,6 @@ export default {
     name: 'Home',
     components: {
         'call-center-header': Header,
-        Pagination
     },
     data () {
         return {
@@ -127,7 +125,7 @@ export default {
         this.fetchQuestionaries();
     },
     methods: {
-
+        onChange,
         fetchQuestionaries ()
         {
             questionaryService.getByNotReplied().then(res => {
