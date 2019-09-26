@@ -35,4 +35,8 @@ module.exports = {
     historyAppeals: 'История Обращений',
     newQuestion: 'Новый вопрос',
     customerInfo: 'Информация о Клиенте',
+    answered: 'Ответь дан',
+    answerDate: 'Дата ответа',
+    category: 'Категория',
+    answer: 'Ответ',
 };

@@ -4,12 +4,12 @@
       <thead>
         <tr>
           <th>№</th>
-          <th>Дата вопроса</th>
-          <th>Ответ дан</th>
-          <th>Дата ответа</th>
-          <th>Категория</th>
-          <th>Вопрос</th>
-          <th>Ответ</th>
+          <th>{{ $lang.words.questionDate }}</th>
+          <th>{{ $lang.words.answered }}</th>
+          <th>{{ $lang.words.answerDate }}</th>
+          <th>{{ $lang.words.category }}</th>
+          <th>{{ $lang.words.question }}</th>
+          <th>{{ $lang.words.answer }}</th>
           <th></th>
         </tr>
       </thead>

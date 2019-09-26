@@ -12,7 +12,7 @@ module.exports = {
     incomingCall: 'Входящий звонок',
     main: 'Башкы бет',
     exit: 'Чыгуу',
-    questionDate: 'Суроонун убактысы',
+    questionDate: 'Суроонун датасы',
     shortQuestionText: 'Суроонун кыскартылган тексти',
     outgoing: 'Исходящий',
     incoming: 'Входящий',
@@ -34,5 +34,9 @@ module.exports = {
     other: 'Башка',
     historyAppeals: 'Мурунку Кайрылуулар',
     newQuestion: 'Жаңы суроо',
-    customerInfo: 'Кардар жөнүндө маалымат'
+    customerInfo: 'Кардар жөнүндө маалымат',
+    answered: 'Жооп берилди',
+    answerDate: 'Жооптун датасы',
+    category: 'Категория',
+    answer: 'Жооп',
 };

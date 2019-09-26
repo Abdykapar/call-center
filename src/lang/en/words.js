@@ -34,5 +34,9 @@ module.exports = {
     other: 'Other',
     historyAppeals: 'History of Appeals',
     newQuestion: 'New Question',
-    customerInfo: 'Customer Information'
+    customerInfo: 'Customer Information',
+    answered: 'Answer given',
+    answerDate: 'Answer date',
+    category: 'Category',
+    answer: 'Answer',
 };
