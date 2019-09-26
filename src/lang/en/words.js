@@ -39,4 +39,7 @@ module.exports = {
     answerDate: 'Answer date',
     category: 'Category',
     answer: 'Answer',
+    operatorComment: 'Operator comment',
+    notAnswered: 'Answer not given',
+    error: 'Something went wrong',
 };

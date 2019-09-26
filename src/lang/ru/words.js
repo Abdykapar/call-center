@@ -39,4 +39,7 @@ module.exports = {
     answerDate: 'Дата ответа',
     category: 'Категория',
     answer: 'Ответ',
+    operatorComment: 'Комментарий оператора',
+    notAnswered: 'Ответ не дан',
+    error: 'Что-то пошло не так',
 };

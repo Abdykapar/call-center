@@ -3,7 +3,7 @@
     <form>
       <div>
         <label class="category">
-          Категория вопроса
+          {{ $lang.words.questionCategory }}
         </label>
         <select
                 v-model="updatedData.categoryId"
@@ -17,7 +17,7 @@
         </select>
       </div>
       <div>
-        <label>Вопрос</label>
+        <label>{{ $lang.words.question }}</label>
         <textarea
           v-model="updatedData.question"
           v-validate="'required'"
@@ -26,14 +26,14 @@
         ></textarea>
       </div>
       <div>
-        <label>Ответ</label>
+        <label>{{ $lang.words.answer }}</label>
         <textarea
                 v-model="updatedData.answer"
                 :class="{'active': checkAnswer}"
         ></textarea>
       </div>
       <div>
-        <label>Комментарий оператора</label>
+        <label>{{ $lang.words.operatorComment }}</label>
         <textarea v-model="updatedData.comment">
         </textarea>
       </div>
@@ -46,10 +46,10 @@
 <!--      </div>-->
       <div>
         <button @click.prevent="saveWithAnswer()">
-          Ответ дан
+          {{ $lang.words.answered }}
         </button>
         <button @click.prevent="saveWithoutAnswer()">
-          Ответ не дан
+          {{ $lang.words.notAnswered }}
         </button>
       </div>
     </form>
@@ -149,7 +149,7 @@ export default {
                             this.$toaster.success(res.message, { timeout:2000 });
                         }).catch(err => {
                             console.log(err);
-                            this.$toaster.error('Something went wrong',{ timeout:2000 });
+                            this.$toaster.error(this.$lang.words.error,{ timeout:2000 });
                         });
                     }
                     else {

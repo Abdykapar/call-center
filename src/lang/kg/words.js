@@ -39,4 +39,7 @@ module.exports = {
     answerDate: 'Жооптун датасы',
     category: 'Категория',
     answer: 'Жооп',
+    operatorComment: 'Оператордун комменти',
+    notAnswered: 'Жооп берилген жок',
+    error: 'Что-то пошло не так',
 };
