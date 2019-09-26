@@ -1,12 +1,12 @@
 <template>
   <div class="call-pagination">
       <div class="pagination-item">
-          <button v-if="currentPage >= totalPages - 1" class="disabled">Next</button>
-          <button v-else @click="nextPage">Next</button>
+          <button v-if="currentPage >= totalPages - 1" class="disabled">{{ $lang.words.next }}</button>
+          <button v-else @click="nextPage">{{ $lang.words.next }}</button>
       </div>
       <div class="pagination-item">
-      <button v-if="currentPage <= 0" class="disabled" >Previous</button>
-      <button v-else @click="previousPage">Previous</button>
+      <button v-if="currentPage <= 0" class="disabled" >{{ $lang.words.previous }}</button>
+      <button v-else @click="previousPage">{{ $lang.words.previous }}</button>
     </div>
   </div>
 </template>
@@ -18,7 +18,6 @@ export default {
     methods: {
         nextPage ()
         {
-            console.log('next page');
             this.$emit('changePage',this.currentPage + 1, this.pageSize);
         },
         previousPage ()

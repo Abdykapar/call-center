@@ -10,13 +10,13 @@
             <img src="/static/images/header/home-interface-button-symbol-2@3x.png">
           </span>
           <span class="main">
-            Главная
+            {{ $lang.words.main }}
           </span>
         </div>
         <div class="logout">
           <span class="exit">
             <router-link to="/login">
-              Выход
+              {{ $lang.words.exit }}
             </router-link>
           </span>
         </div>
@@ -28,7 +28,7 @@
         <router-link :to="{ name: 'CallDatabase' }">
             <img v-if="$route.path !== '/call-data'" src="/static/images/header/books-stack-of-three%20(1)@3x.png">
             <img v-else src="/static/images/header/book-red.png">
-            База знаний
+            {{ $lang.words.knowledgeBase }}
         </router-link>
 
       </span>
@@ -42,7 +42,7 @@
                   v-else
                   src="/static/images/header/incoming-call@3x.png"
           >
-          Исходящий звонок
+          {{ $lang.words.outgoingCall }}
         </router-link>
       </span>
       <span :class="{'active': $route.path === '/call-history'}">
@@ -55,7 +55,7 @@
             v-else
             src="/static/images/header/incoming-call@3x.png"
           >
-          Входящий звонок
+          {{ $lang.words.incomingCall }}
         </router-link>
       </span>
     </div>

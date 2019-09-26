@@ -5,13 +5,13 @@
       <table>
         <thead>
           <tr>
-            <th>Тип звонка</th>
-            <th>Дата вопроса</th>
-            <th>Категория вопроса</th>
-            <th>ФИО</th>
-            <th>Телефон</th>
-            <th>Сокращенный текст вопроса</th>
-            <th>Есть ответ</th>
+            <th>{{ $lang.words.callType }}</th>
+            <th>{{ $lang.words.questionDate }}</th>
+            <th>{{ $lang.words.questionCategory }}</th>
+            <th>{{ $lang.words.fullName }}</th>
+            <th>{{ $lang.words.phone }}</th>
+            <th>{{ $lang.words.shortQuestionText }}</th>
+            <th>{{ $lang.words.haveAnswer }}</th>
           </tr>
         </thead>
         <tbody>
@@ -19,7 +19,7 @@
           <template v-for="item in questions">
               <tr class="spacer"></tr>
               <tr :key="item.uuid">
-                  <td>{{ item.callType === 1 ? 'Входящий' : 'Исходящий' }}</td>
+                  <td>{{ item.callType === 1 ? $lang.words.incoming : $lang.words.outgoing }}</td>
                   <td>{{ item.repliedAt }}</td>
                   <td>{{ item.categoryTitle }}</td>
                   <td>{{ item.firstName }} {{ item.lastName }} {{ item.patronymic }}</td>

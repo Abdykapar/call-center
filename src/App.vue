@@ -33,6 +33,9 @@ export default {
             alert: state => state.alert
         })
     },
+    created (){
+        this.$lang.setLang('ru');
+    },
     methods: {
         ...mapActions({
             clearAlert: 'alert/clear' 

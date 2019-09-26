@@ -81,13 +81,13 @@ function getByPhone (phone, page, size) {
     return fetch(`${config.apiUrl}/questionary/get-by-phone/${phone}?page=${page}&size=${size}`, requestOptions).then(handleResponse);
 }
 
-function getByNotReplied (page, size) {
+function getByNotReplied () {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
 
-    return fetch(`${config.apiUrl}/questionary/not-replied?page=${page}&size=${size}`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/questionary/not-replied`, requestOptions).then(handleResponse);
 }
 
 function update (data){

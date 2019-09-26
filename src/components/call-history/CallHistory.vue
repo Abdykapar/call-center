@@ -460,8 +460,11 @@ export default {
             }
         }
         .column-one{
-            width: 30%;
+            width: 40%;
             margin: 0 5% 0 0;
+            div{
+                width: 95%;
+            }
         }
         .column-two{
           width: 60%;
