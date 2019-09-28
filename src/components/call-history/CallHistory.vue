@@ -228,6 +228,7 @@ export default {
             this.loading = true;
             if (isNaN(e.target.value)){
                 this.validPhone = true;
+                this.loading = false;
             } else {
                 this.validPhone = false;
                 if (e.target.value.length === 0)
@@ -286,6 +287,7 @@ export default {
                         this.forceRerender();
                     }).catch(err => console.log(err));
                 }
+                this.loading = false;
             }
         },
         fetchSchool (id){

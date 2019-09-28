@@ -75,7 +75,13 @@ const columns = [ {
     }, {
         text: 'пароль и логин',
         value: 'пароль и логин',
-    }],
+    },{
+        text: 'оценка',
+        value: 'оценка'
+    },{
+        text:'кард-ридер',
+        value:'кард-ридер',
+    } ],
     filterMultiple: true,
     onFilter: (value, record) => record.categoryTitle.indexOf(value) === 0,
     sorter: (a, b) => a.categoryTitle < b.categoryTitle ? -1 : a.categoryTitle > b.categoryTitle ? 1 : 0,
