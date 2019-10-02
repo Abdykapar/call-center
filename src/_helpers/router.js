@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import $user from '@/_helpers/protect-route';
 
 import HomePage from '../components/home/HomePage';
 import LoginPage from '../components/login/LoginPage';
@@ -13,28 +14,46 @@ Vue.use(Router);
 export const router = new Router({
     mode: 'history',
     routes: [
-        { path: '/', component: HomePage },
+        {
+            path: '/',
+            component: HomePage,
+            beforeEnter: (to, from, next) => {
+                $user.checkOperator(next);
+            },
+        },
         { path: '/login', component: LoginPage },
         {
             name: 'CallHistory',
             path: '/call-history',
-            component: CallHistory
+            component: CallHistory,
+            beforeEnter: (to, from, next) => {
+                $user.checkOperator(next);
+            },
         },
         {
             name: 'CallHistoryOutgoing',
             path: '/call-history-outgoing',
             component: CallHistoryOutgoing,
             props: true,
+            beforeEnter: (to, from, next) => {
+                $user.checkOperator(next);
+            },
         },
         {
             name: 'CallDatabase',
             path: '/call-data',
             component: CallDatabse,
+            beforeEnter: (to, from, next) => {
+                $user.checkOperator(next);
+            },
         },
         {
             name: 'Report',
             path: '/report',
             component: Report,
+            beforeEnter: (to, from, next) => {
+                $user.checkOperator(next);
+            },
         },
         // otherwise redirect to home
         { path: '*', redirect: '/' }
