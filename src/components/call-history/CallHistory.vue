@@ -25,7 +25,13 @@
               </div>
               <div>
                 <label>{{ $lang.words.name }}</label>
-                <input v-model="person.name">
+                <input
+                        v-model="person.name"
+                        name="name"
+                        v-validate
+                        data-vv-rules="required"
+                        :class="{ 'is-invalid' : submitted && errors.has('name') }"
+                >
               </div>
               <div>
                 <label>{{ $lang.words.surname }}</label>
@@ -64,7 +70,15 @@
               <div>
                 <label>{{ $lang.words.region }}</label>
                 <input v-if="school.region.title" v-model="school.region.title" disabled>
-                <select v-else v-model="school.region.id" @change="fetchRayon(school.region.id)">
+                <select
+                        v-show="!school.region.title"
+                        v-model="school.region.id"
+                        @change="fetchRayon(school.region.id)"
+                        name="region"
+                        v-validate
+                        data-vv-rules="required"
+                        :class="{ 'is-invalid' : submitted && errors.has('region') }"
+                >
                   <option v-for="region in regions" :key="region.id" :value="region.id">
                       {{ region.title }}
                   </option>
@@ -75,7 +89,13 @@
                   {{ $lang.words.rayon }}
                 </label>
                 <input v-if="school.rayon.title" v-model="school.rayon.title" disabled>
-                <select v-else v-model="school.rayon.id" @change="fetchSchools(school.rayon.id)">
+                <select v-show="!school.rayon.title"
+                        v-model="school.rayon.id"
+                        @change="fetchSchools(school.rayon.id)"
+                        v-validate="'required'"
+                        name="rayon"
+                        :class="{ 'is-invalid' : submitted && errors.has('rayon') }"
+                >
                     <option v-for="rayon in rayons" :key="rayon.id" :value="rayon.id">
                         {{ rayon.title }}
                     </option>
@@ -84,7 +104,12 @@
               <div>
                 <label>{{ $lang.words.school }} № </label>
                 <input v-if="person.schoolTitle" v-model="person.schoolTitle" disabled>
-                <select v-else v-model="person.schoolId">
+                <select v-show="!person.schoolTitle"
+                        v-model="person.schoolId"
+                        name="school"
+                        v-validate="'required'"
+                        :class="{ 'is-invalid' : submitted && errors.has('school') }"
+                >
                   <option v-for="school in schools" :key="school.id" :value="school.id">
                     {{ school.name }}
                   </option>
@@ -119,6 +144,7 @@
                 :person="personChanged"
                 :call-type="callType"
                 :update-or-not="updateQuestionary"
+                v-on:check="saveData"
         />
       </div>
       <div v-if="showInfoClient">
@@ -295,7 +321,6 @@ export default {
                 if (res)
                 {
                     this.school = res;
-                    console.log(res);
                 }
                 else {
                     this.school = {
@@ -339,12 +364,14 @@ export default {
         },
         saveData ()
         {
-            this.submitted = true;
-            this.$validator.validate().then(valid => {
-                if (valid){
-                    console.log(this.phone);
-                }
-            });
+            if(this.$validator.fields.find({ name: 'region' }) !== undefined) {
+                this.submitted = true;
+                this.$validator.validate().then(valid => {
+                    if (valid) {
+                        console.log(this.phone);
+                    }
+                });
+            }
         },
         checkCallType ()
         {

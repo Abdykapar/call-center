@@ -16,6 +16,7 @@ export const router = new Router({
     routes: [
         {
             path: '/',
+            name: 'home',
             component: HomePage,
             beforeEnter: (to, from, next) => {
                 $user.checkOperator(next);

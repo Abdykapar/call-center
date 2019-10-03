@@ -108,6 +108,7 @@
           :call-type="callType"
           :data="updatedFirstData"
           :update-or-not="updateQuestionary"
+          v-on:check="saveData"
         />
       </div>
       <div v-if="showInfoClient">

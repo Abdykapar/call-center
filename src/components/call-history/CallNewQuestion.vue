@@ -95,7 +95,6 @@ export default {
             {
                 return this.questionary;
             }
-            console.log(this.data);
             return this.data;
         },
     },
@@ -124,10 +123,11 @@ export default {
         },
         saveQuestionary ()
         {
+            this.$emit('check');
             this.categoryRequired = this.questionary.questionCategoryId === 0;
             this.submitted = true;
             this.$validator.validate().then(valid => {
-                if (valid) {
+                if (valid && this.person.schoolId && this.person.name && this.person.surname && this.person.phone) {
                     this.questionary.repliedAt = this.person.repliedAt;
                     this.questionary.extraPhone = this.person.extraPhone;
                     this.questionary.personType = this.person.personType;
@@ -144,12 +144,12 @@ export default {
                         this.questionary.question = this.updatedData.question;
                         this.questionary.questionCategoryId = this.updatedData.categoryId;
                         this.questionary.id = this.updatedData.uuid;
-                        console.log(this.questionary);
                         questionaryService.update(this.questionary).then(res => {
-                            this.$toaster.success(res.message, { timeout:2000 });
+                            this.$toaster.success(res.message, { timeout:3000 });
+                            this.$router.push('/');
                         }).catch(err => {
                             console.log(err);
-                            this.$toaster.error(this.$lang.words.error,{ timeout:2000 });
+                            this.$toaster.error(this.$lang.words.error,{ timeout:3000 });
                         });
                     }
                     else {
@@ -157,9 +157,9 @@ export default {
                         this.questionary.comment = this.updatedData.comment;
                         this.questionary.question = this.updatedData.question;
                         this.questionary.questionCategoryId = this.updatedData.categoryId;
-                        console.log(this.questionary);
                         questionaryService.create(this.questionary).then(res => {
-                            this.$toaster.success(res.message, { timeout:2000 });
+                          this.$router.push('/');
+                          this.$toaster.success(res.message, { timeout:3000 });
                         }).catch(err => console.log(err));
                     }
 
