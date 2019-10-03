@@ -115,7 +115,8 @@ export default {
             display: table;
             tr{
                 th{
-                    font-size: 18px;
+                    padding: 0 10px;
+                    font-size: 16px;
                     font-weight: normal;
                     font-style: normal;
                     font-stretch: normal;
@@ -138,6 +139,9 @@ export default {
                     }
                     td:first-child{
                         padding-left: 15px;
+                    }
+                    td{
+                        padding: 0 10px;
                     }
                 }
             }

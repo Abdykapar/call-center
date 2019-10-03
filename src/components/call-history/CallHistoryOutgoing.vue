@@ -213,7 +213,7 @@ export default {
                 region: {
                     id: null,
                     title: '',
-                }
+                },
             },
             validPhone:false,
             selectedPerson: null,
@@ -441,9 +441,14 @@ export default {
                 this.person.surname = this.questionaryToAnswer.lastName;
                 this.person.patronymic = this.questionaryToAnswer.patronymic;
                 this.person.phone = this.questionaryToAnswer.phone;
+                this.person.schoolId = this.questionaryToAnswer.schoolId;
                 this.fetchSchool(this.questionaryToAnswer.schoolId);
                 this.firstData = this.questionaryToAnswer;
-            } else { console.log(false); }
+                this.updateQuestionary = true;
+            } else {
+                console.log(false);
+                this.updateQuestionary = false;
+            }
         },
         answerQuestion (question)
         {
