@@ -1,5 +1,6 @@
 <template>
   <div class="report-container">
+    <pre-loader :show="loading"></pre-loader>
     <div class="report-header">
       <button @click="exportToExcel('tblexportData')">
         <img src="/static/images/report/icons8-curved-arrow-240@3x.png">
@@ -28,6 +29,7 @@
         :pagination="false"
         bordered
         @change="onChange"
+        :rowKey="record => record.id"
       >
         <template
           slot="lastName"
@@ -68,6 +70,7 @@
 
 <script>
 import { questionaryService } from '@/_services/questionary.service';
+import PreLoader from '@/components/preloader/PreLoader';
 
 import moment from 'moment';
 const columns = [
@@ -157,10 +160,11 @@ function onChange ( pagination, filters, sorter, sourceData) {
 export default {
     name: 'Report',
     components: {
-        // downloadExcel
+        PreLoader
     },
     data () {
         return {
+            loading: false,
             columns,
             filteredData,
             questionaries: [],
@@ -208,6 +212,7 @@ export default {
         onChange,
         fetchQuestionary ()
         {
+            this.loading = true;
             questionaryService.getList().then(res => {
                 if (this.startDate !== null && this.endDate !== null)
                 {
@@ -224,7 +229,11 @@ export default {
                 else
                 {this.questionaries = res;}
                 this.filteredData = this.questionaries;
-            }).catch(err => console.log(err));
+                this.loading = false;
+            }).catch(err => {
+                this.loading = false;
+                console.log(err)
+            });
         },
         exportToExcel (tableID, filename = ''){
             let downloadurl;

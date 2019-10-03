@@ -13,19 +13,25 @@
               <div>
                 <label>{{ $lang.words.phone }}</label>
                 <input
-                  v-model="phone"
-                  v-validate="'required'"
-                  maxlength="10"
-                  type="text"
-                  placeholder="0556256585"
-                  name="phone"
-                  :class="{'is-invalid': (submitted && errors.has('phone')) || validPhone}"
-                  @keyup="checkPhone($event)"
+                        v-model="phone"
+                        v-validate="'required'"
+                        maxlength="10"
+                        type="text"
+                        placeholder="0556256585"
+                        name="phone"
+                        :class="{'is-invalid': (submitted && errors.has('phone')) || validPhone}"
+                        @keyup="checkPhone($event)"
                 >
               </div>
               <div>
                 <label>{{ $lang.words.name }}</label>
-                <input v-model="person.name">
+                <input
+                        v-model="person.name"
+                        name="name"
+                        v-validate
+                        data-vv-rules="required"
+                        :class="{ 'is-invalid' : submitted && errors.has('name') }"
+                >
               </div>
               <div>
                 <label>{{ $lang.words.surname }}</label>
@@ -36,8 +42,12 @@
                 <input v-model="person.patronymic">
               </div>
               <div>
-                <label>{{ $lang.words.school }} № </label>
-                <input v-model="person.schoolTitle" disabled>
+                <label>{{ $lang.words.status }}</label>
+                <select v-model="person.personType">
+                  <option v-for="type in parentType" :key="type.id" :value="type.id">
+                    {{ $lang.words[type.name] }}
+                  </option>
+                </select>
               </div>
             </div>
 
@@ -46,35 +56,64 @@
                 <label>{{ $lang.words.extraPhone }}</label>
                 <input v-model="person.extraPhone">
               </div>
-              <div>
-                <label>{{ $lang.words.status }}</label>
-                <select v-model="person.personType">
-                  <option
-                    v-for="type in parentType"
-                    :key="type.id"
-                    :value="type.id"
-                  >
-                    {{ $lang.words[type.name] }}
-                  </option>
-                </select>
-              </div>
+
               <div>
                 <label>{{ $lang.words.date }}</label>
                 <a-date-picker
-                  v-model="dateNow"
-                  show-time
-                  format="YYYY-MM-DD HH:mm"
-                  :placeholder="$lang.words.chooseDate"></a-date-picker>
+                        v-model="dateNow"
+                        show-time
+                        format="YYYY-MM-DD HH:mm"
+                        :placeholder="$lang.words.chooseDate">
+
+                </a-date-picker>
+              </div>
+              <div>
+                <label>{{ $lang.words.region }}</label>
+                <input v-if="school.region.title" v-model="school.region.title" disabled>
+                <select
+                        v-show="!school.region.title"
+                        v-model="school.region.id"
+                        @change="fetchRayon(school.region.id)"
+                        name="region"
+                        v-validate
+                        data-vv-rules="required"
+                        :class="{ 'is-invalid' : submitted && errors.has('region') }"
+                >
+                  <option v-for="region in regions" :key="region.id" :value="region.id">
+                    {{ region.title }}
+                  </option>
+                </select>
               </div>
               <div>
                 <label>
                   {{ $lang.words.rayon }}
                 </label>
-                <input v-model="school.rayon.title" disabled>
+                <input v-if="school.rayon.title" v-model="school.rayon.title" disabled>
+                <select v-show="!school.rayon.title"
+                        v-model="school.rayon.id"
+                        @change="fetchSchools(school.rayon.id)"
+                        v-validate="'required'"
+                        name="rayon"
+                        :class="{ 'is-invalid' : submitted && errors.has('rayon') }"
+                >
+                  <option v-for="rayon in rayons" :key="rayon.id" :value="rayon.id">
+                    {{ rayon.title }}
+                  </option>
+                </select>
               </div>
               <div>
-                <label>{{ $lang.words.region }}</label>
-                <input v-model="school.region.title" disabled>
+                <label>{{ $lang.words.school }} № </label>
+                <input v-if="person.schoolTitle" v-model="person.schoolTitle" disabled>
+                <select v-show="!person.schoolTitle"
+                        v-model="person.schoolId"
+                        name="school"
+                        v-validate="'required'"
+                        :class="{ 'is-invalid' : submitted && errors.has('school') }"
+                >
+                  <option v-for="school in schools" :key="school.id" :value="school.id">
+                    {{ school.name }}
+                  </option>
+                </select>
               </div>
             </div>
           </form>
@@ -106,7 +145,7 @@
           v-if="renderComponent"
           :person="personChanged"
           :call-type="callType"
-          :data="updatedFirstData"
+          :data="firstData"
           :update-or-not="updateQuestionary"
           v-on:check="saveData"
         />
@@ -123,6 +162,7 @@
 </template>
 
 <script>
+import { locationService } from '@/_services/location/location.service';
 import { questionaryService } from '@/_services/questionary.service';
 import Header from '@/components/header/Header';
 import CallHistoryTable from '@/components/call-history/CallHistoryTable';
@@ -167,9 +207,11 @@ export default {
             dateNow:moment(),
             school: {
                 rayon: {
+                    id: null,
                     title: '',
                 },
                 region: {
+                    id: null,
                     title: '',
                 }
             },
@@ -192,7 +234,7 @@ export default {
             ],
             renderComponent: true,
             data: [],
-            updateQuestionary: true,
+            updateQuestionary: false,
             pageData: {
                 page: {
                     number: 0,
@@ -201,6 +243,9 @@ export default {
                 }
             },
             firstData: [],
+            regions: [],
+            rayons: [],
+            schools: [],
         };
     },
     computed: {
@@ -208,13 +253,11 @@ export default {
             this.person.repliedAt= moment(this.dateNow).format('DD.MM.YYYY HH:mm');
             return this.person;
         },
-        updatedFirstData: function () {
-            return this.firstData;
-        }
     },
     created () {
         this.checkCallType();
         this.checkAnswerCall();
+        this.fetchRegions();
     },
     methods: {
         checkPhone (e)
@@ -273,12 +316,17 @@ export default {
                         surname: '',
                         patronymic: '',
                         schoolTitle: '',
+                        phone: phone,
                     };
                     this.school.region.title = '';
+                    this.school.region.id = null;
                     this.school.rayon.title = '';
+                    this.school.rayon.id = null;
                     this.loading = false;
+                    this.firstData = [];
                 }
             }).then(() => {
+                console.log(this.updateQuestionary);
                 if (this.showCallHistoryTable)
                 {
                     this.fetchData(this.person.phone);
@@ -338,7 +386,7 @@ export default {
             this.submitted = true;
             this.$validator.validate().then(valid => {
                 if (valid){
-                    console.log(this.phone);
+                    console.log(this.errors);
                 }
             });
         },
@@ -358,7 +406,6 @@ export default {
         forceRerender () {
             this.renderComponent = false;
             this.$nextTick(() => {
-                // Add the component back in
                 this.renderComponent = true;
             });
         },
@@ -369,8 +416,16 @@ export default {
                 {
                     this.data = res['_embedded']['questionaryResourceList'];
                     this.firstData = res['_embedded']['questionaryResourceList'].filter(item => item.replied === 2)[0];
+                    if(this.firstData)
+                    {
+                        this.updateQuestionary = true;
+                    }
                 }
-                else {this.data = [];}
+                else {
+                  this.data = [];
+                  this.firstData = [];
+                    this.updateQuestionary = false;
+                }
             }).catch(err => console.log(err));
         },
         checkAnswerCall ()
@@ -394,6 +449,27 @@ export default {
         {
             this.firstData = question;
             this.showQuestion();
+        },
+        fetchRegions ()
+        {
+          locationService.getRegions().then(res => {
+            if (res)
+            {
+              this.regions = res.content;
+            } else { this.regions = []; }
+          }).catch(err => console.log(err));
+        },
+        fetchRayon (id)
+        {
+          locationService.getRayonByRegion(id).then(res => {
+            this.rayons = res;
+          }).catch(err => console.log(err));
+        },
+        fetchSchools (id)
+        {
+          schoolService.getByRayon(id).then(res => {
+            this.schools = res;
+          }).catch(err => console.log(err));
         }
     },
 
@@ -456,7 +532,7 @@ export default {
                 opacity: 0.4;
             }
             select{
-                width: 106.9px;
+                width: 40%;
                 height: 29px;
                 background-color: #ffffff;
                 border: none;

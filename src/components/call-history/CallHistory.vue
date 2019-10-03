@@ -297,9 +297,12 @@ export default {
                                 surname: '',
                                 patronymic: '',
                                 schoolTitle: '',
+                                phone: this.phone,
                             };
                             this.school.region.title = '';
+                            this.school.region.id = null;
                             this.school.rayon.title = '';
+                            this.school.rayon.id = null;
                             this.loading = false;
                         }
                     }).then(() => {
