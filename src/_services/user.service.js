@@ -24,7 +24,11 @@ function login (username, password) {
             // login successful if there's a jwt token in the response
             console.log(user);
             if (user.token) {
-                window.location.href = '/';
+                if(user.roles.includes('ROLE_SUPER_ADMIN')){
+                    window.location.href = '/report';
+                } else{
+                    window.location.href = '/';
+                }
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
             }

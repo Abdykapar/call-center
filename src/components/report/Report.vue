@@ -30,6 +30,7 @@
         bordered
         @change="onChange"
         :rowKey="record => record.id"
+        :scroll="{ x: '80%' }"
       >
         <template
           slot="lastName"
@@ -83,13 +84,19 @@ const columns = [
         title: 'Категория вопроса',
         dataIndex: 'categoryTitle',
         key: 'categoryTitle',
-        filters: [ {
-            text: 'технический вопрос',
-            value: 'технический вопрос',
+        filters: [{
+          text: 'технический вопрос',
+          value: 'технический вопрос',
         }, {
-            text: 'пароль и логин',
-            value: 'пароль и логин',
-        } ],
+          text: 'пароль и логин',
+          value: 'пароль и логин',
+        }, {
+          text: 'оценка',
+          value: 'оценка'
+        }, {
+          text: 'кард-ридер',
+          value: 'кард-ридер',
+        }],
         filterMultiple: true,
         onFilter: (value, record) => record.categoryTitle.indexOf(value) === 0,
         sorter: (a, b) => a.categoryTitle < b.categoryTitle ? -1 : a.categoryTitle > b.categoryTitle ? 1 : 0,
@@ -272,7 +279,6 @@ export default {
     .report-container{
         display: table;
         width: 100%;
-
         background-color: #f3f3f3;
     }
     .report-header{
@@ -295,7 +301,7 @@ export default {
     }
     .report-table{
         width: 95%;
-        margin: 20px auto;
+        margin: 20px auto 20px auto;
         background-color: white;
     }
 </style>
