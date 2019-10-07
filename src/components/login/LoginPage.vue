@@ -33,7 +33,7 @@
               type="checkbox"
               v-model="remember"
               name="remember"
-            >Запомнит
+            >Запомнит пароль
           </div>
         </form>
       </div>
@@ -153,8 +153,9 @@ export default {
             }
         }
         .save-account{
-            /*display: flex;*/
-            width: 25%;
+            display: flex;
+            justify-content: center;
+            width: 45%;
             float: right;
             margin-top: 20px;
             font-family: Helvetica;
@@ -165,6 +166,9 @@ export default {
             letter-spacing: normal;
             text-align: left;
             color: rgba(#707070,0.4);
+            input{
+                margin-top: 3px;
+            }
         }
     }
     .is-invalid{
