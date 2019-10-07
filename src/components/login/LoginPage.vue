@@ -9,11 +9,19 @@
           <input
             v-model="username"
             type="text"
-            placeholder="Email"
+            name="username"
+            v-validate="'required'"
+            :class="{ 'is-invalid' : submitted && errors.has('username') }"
+            autocomplate="username"
+            placeholder="Имя пользователя"
           >
           <input
             v-model="password"
             type="password"
+            name="password"
+            v-validate="'required'"
+            :class="{ 'is-invalid' : submitted && errors.has('password') }"
+            autocomplate="password"
             placeholder="Пароль"
           >
           <button type="submit">
@@ -23,7 +31,8 @@
             <input
               class="call-center-check"
               type="checkbox"
-              checked
+              v-model="remember"
+              name="remember"
             >Запомнит
           </div>
         </form>
@@ -43,6 +52,7 @@ export default {
         return {
             username: '',
             password: '',
+            remember: false,
             submitted: false,
         };
     },
@@ -50,16 +60,22 @@ export default {
         ...mapState('account', [ 'status' ])
     },
     created (){
+        this.username = localStorage.getItem('username');
+        this.password = localStorage.getItem('password');
         this.logout();
     },
     methods: {
         ...mapActions('account', [ 'login','logout' ]),
         handleSubmit (e) {
             this.submitted = true;
-            const { username, password } = this;
-            if (username && password) {
-                this.login({ username, password });
-            }
+            this.$validator.validate().then(valid => {
+                if(valid){
+                    const { username, password, remember } = this;
+                    if (username && password) {
+                        this.login({ username, password, remember });
+                    }
+                }
+            });
         }
     }
 };
@@ -150,5 +166,8 @@ export default {
             text-align: left;
             color: rgba(#707070,0.4);
         }
+    }
+    .is-invalid{
+        border: 1px solid red;
     }
 </style>

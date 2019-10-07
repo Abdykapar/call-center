@@ -287,7 +287,7 @@ export default {
                     };
                     this.data = [];
                 }
-                if (e.target.value.length >= 1)
+                if (e.target.value.length >=4)
                 {
                     this.fetchPersonWithPhone(this.phone);
                 }
@@ -326,7 +326,6 @@ export default {
                     this.firstData = [];
                 }
             }).then(() => {
-                console.log(this.updateQuestionary);
                 if (this.showCallHistoryTable)
                 {
                     this.fetchData(this.person.phone);

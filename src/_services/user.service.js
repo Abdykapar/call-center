@@ -11,26 +11,29 @@ export const userService = {
     delete: _delete
 };
 
-function login (username, password) {
+function login (username, password, remember) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
     };
-    console.log('click');
     return fetch(`${config.apiUrl}/auth/login`, requestOptions)
         .then(handleResponse)
-        .then(user => {
-            // login successful if there's a jwt token in the response
-            console.log(user);
+            .then(user => {
             if (user.token) {
-                if(user.roles.includes('ROLE_SUPER_ADMIN')){
-                    window.location.href = '/report';
-                } else{
+                if(window.location.href === 'https://callcenter.kundoluk.kg/login'){
                     window.location.href = '/';
+                } else if(window.location.href === 'https://report.kundoluk.kg/login') {
+                    window.location.href = '/report';
                 }
-                // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
+                if(remember){
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('password', password);
+                }else{
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('password');
+                }
             }
 
             return user;
@@ -38,7 +41,6 @@ function login (username, password) {
 }
 
 function logout () {
-    // remove user from local storage to log user out
     localStorage.removeItem('user');
 }
 
