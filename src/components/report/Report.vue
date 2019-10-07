@@ -278,6 +278,7 @@ export default {
 <style lang="scss" scoped>
     .report-container{
         display: table;
+        height: 100vh;
         width: 100%;
         background-color: #f3f3f3;
     }
