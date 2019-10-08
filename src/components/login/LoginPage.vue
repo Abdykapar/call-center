@@ -33,7 +33,7 @@
               type="checkbox"
               v-model="remember"
               name="remember"
-            >Запомнит пароль
+            >Запомнить пароль
           </div>
         </form>
       </div>
