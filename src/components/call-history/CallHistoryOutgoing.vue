@@ -287,7 +287,7 @@ export default {
                     };
                     this.data = [];
                 }
-                if (e.target.value.length >=4)
+                if (e.target.value.length >=1)
                 {
                     this.fetchPersonWithPhone(this.phone);
                 }

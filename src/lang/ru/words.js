@@ -45,4 +45,10 @@ module.exports = {
     address: 'Адрес',
     position: 'Должность',
     answerQuestion: 'Ответить на вопрос',
+    yes: 'Да',
+    no: 'Нет',
+    close: 'Закрыть',
+    save: 'Сохранить',
+    edit_questionary: 'Изменить анкету',
+    successMessage: 'Успешно!!!',
 };

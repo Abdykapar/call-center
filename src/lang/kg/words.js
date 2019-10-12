@@ -45,4 +45,10 @@ module.exports = {
     address: 'Адрес',
     position: 'Должность',
     answerQuestion: 'Суроого жооп берүү',
+    yes: 'Ооба',
+    no: 'Жок',
+    close: 'Жабуу',
+    save: 'Сактоо',
+    edit_questionary: 'Анкетаны өзгөртүү',
+    successMessage: 'Ийгиликтүү!!!',
 };

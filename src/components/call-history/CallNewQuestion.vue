@@ -145,7 +145,7 @@ export default {
                         this.questionary.questionCategoryId = this.updatedData.categoryId;
                         this.questionary.id = this.updatedData.uuid;
                         questionaryService.update(this.questionary).then(res => {
-                            this.$toaster.success(res.message, { timeout:3000 });
+                            this.$toaster.success(this.$lang.words.successMessage, { timeout:3000 });
                             this.$router.push('/');
                         }).catch(err => {
                             console.log(err);
@@ -159,7 +159,7 @@ export default {
                         this.questionary.questionCategoryId = this.updatedData.categoryId;
                         questionaryService.create(this.questionary).then(res => {
                           this.$router.push('/');
-                          this.$toaster.success(res.message, { timeout:3000 });
+                          this.$toaster.success(this.$lang.words.successMessage, { timeout:3000 });
                         }).catch(err => console.log(err));
                     }
 

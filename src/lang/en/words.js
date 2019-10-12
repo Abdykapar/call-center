@@ -45,4 +45,10 @@ module.exports = {
     address: 'Address',
     position: 'Position',
     answerQuestion: 'Answer the question',
+    yes: 'Yes',
+    no: 'No',
+    close: 'Close',
+    save: 'Save',
+    edit_questionary: 'Edit questionnaire',
+    successMessage: 'Successfully!!!',
 };
