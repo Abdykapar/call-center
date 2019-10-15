@@ -1,487 +1,475 @@
 <template>
-  <div class="call-history-container">
-    <pre-loader :show="loading"></pre-loader>
-    <CallCenterHeader />
-    <div class="call-history-content">
-      <div class="call-history-profile">
-        <div class="profile-header">
-          <span>{{ $lang.words.questionnaire }}</span>
-        </div>
-        <div class="call-history-form">
-          <form @submit.prevent="saveData">
-            <div class="column-one">
-              <div>
-                <label>{{ $lang.words.phone }}</label>
-                <input
-                        v-model="phone"
-                        v-validate="'required'"
-                        maxlength="15"
-                        type="text"
-                        placeholder="0556256585"
-                        name="phone"
-                        :class="{'is-invalid': (submitted && errors.has('phone'))}"
-                        @keyup="checkPhone($event)"
-                >
-              </div>
-              <div>
-                <label>{{ $lang.words.name }}</label>
-                <input
-                        v-model="person.name"
-                >
-              </div>
-              <div>
-                <label>{{ $lang.words.surname }}</label>
-                <input v-model="person.surname">
-              </div>
-              <div>
-                <label>{{ $lang.words.lastName }}</label>
-                <input v-model="person.patronymic">
-              </div>
-              <div>
-                <label>{{ $lang.words.status }}</label>
-                <select v-model="person.personType">
-                  <option v-for="type in parentType" :key="type.id" :value="type.id">
-                    {{ $lang.words[type.name] }}
-                  </option>
-                </select>
-              </div>
+    <div class="call-history-container">
+        <pre-loader :show="loading"></pre-loader>
+        <CallCenterHeader/>
+        <div class="call-history-content">
+            <div class="call-history-profile">
+                <div class="profile-header">
+                    <span>{{ $lang.words.questionnaire }}</span>
+                </div>
+                <div class="call-history-form">
+                    <form @submit.prevent="saveData">
+                        <div class="column-one">
+                            <div>
+                                <label>{{ $lang.words.phone }}</label>
+                                <input
+                                        v-model="phone"
+                                        v-validate="'required'"
+                                        maxlength="15"
+                                        type="text"
+                                        placeholder="0556256585"
+                                        name="phone"
+                                        :class="{'is-invalid': (submitted && errors.has('phone'))}"
+                                        @keyup="checkPhone($event)"
+                                >
+                            </div>
+                            <div>
+                                <label>{{ $lang.words.name }}</label>
+                                <input
+                                        v-model="person.name"
+                                >
+                            </div>
+                            <div>
+                                <label>{{ $lang.words.surname }}</label>
+                                <input v-model="person.surname">
+                            </div>
+                            <div>
+                                <label>{{ $lang.words.lastName }}</label>
+                                <input v-model="person.patronymic">
+                            </div>
+                            <div>
+                                <label>{{ $lang.words.status }}</label>
+                                <select v-model="person.personType">
+                                    <option v-for="type in parentType" :key="type.id" :value="type.id">
+                                        {{ $lang.words[type.name] }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="column-two">
+                            <div>
+                                <label>{{ $lang.words.extraPhone }}</label>
+                                <input v-model="person.extraPhone">
+                            </div>
+
+                            <div>
+                                <label>{{ $lang.words.date }}</label>
+                                <a-date-picker
+                                        v-model="dateNow"
+                                        show-time
+                                        format="YYYY-MM-DD HH:mm"
+                                        :placeholder="$lang.words.chooseDate">
+
+                                </a-date-picker>
+                            </div>
+                            <div>
+                                <label>{{ $lang.words.region }}</label>
+                                <input v-if="school.region.title" v-model="school.region.title" disabled>
+                                <select
+                                        v-show="!school.region.title"
+                                        v-model="school.region.id"
+                                        @change="fetchRayon(school.region.id)"
+                                >
+                                    <option v-for="region in regions" :key="region.id" :value="region.id">
+                                        {{ region.title }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>
+                                    {{ $lang.words.rayon }}
+                                </label>
+                                <input v-if="school.rayon.title" v-model="school.rayon.title" disabled>
+                                <select v-show="!school.rayon.title"
+                                        v-model="school.rayon.id"
+                                        @change="fetchSchools(school.rayon.id)"
+                                >
+                                    <option v-for="rayon in rayons" :key="rayon.id" :value="rayon.id">
+                                        {{ rayon.title }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>{{ $lang.words.school }} № </label>
+                                <input v-if="person.schoolTitle" v-model="person.schoolTitle" disabled>
+                                <select v-show="!person.schoolTitle"
+                                        v-model="person.schoolId"
+                                >
+                                    <option v-for="school in schools" :key="school.id" :value="school.id">
+                                        {{ school.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="column-two">
-              <div>
-                <label>{{ $lang.words.extraPhone }}</label>
-                <input v-model="person.extraPhone">
-              </div>
-
-              <div>
-                <label>{{ $lang.words.date }}</label>
-                <a-date-picker
-                        v-model="dateNow"
-                        show-time
-                        format="YYYY-MM-DD HH:mm"
-                        :placeholder="$lang.words.chooseDate">
-
-                </a-date-picker>
-              </div>
-              <div>
-                <label>{{ $lang.words.region }}</label>
-                <input v-if="school.region.title" v-model="school.region.title" disabled>
-                <select
-                        v-show="!school.region.title"
-                        v-model="school.region.id"
-                        @change="fetchRayon(school.region.id)"
-                >
-                  <option v-for="region in regions" :key="region.id" :value="region.id">
-                    {{ region.title }}
-                  </option>
-                </select>
-              </div>
-              <div>
-                <label>
-                  {{ $lang.words.rayon }}
-                </label>
-                <input v-if="school.rayon.title" v-model="school.rayon.title" disabled>
-                <select v-show="!school.rayon.title"
-                        v-model="school.rayon.id"
-                        @change="fetchSchools(school.rayon.id)"
-                >
-                  <option v-for="rayon in rayons" :key="rayon.id" :value="rayon.id">
-                    {{ rayon.title }}
-                  </option>
-                </select>
-              </div>
-              <div>
-                <label>{{ $lang.words.school }} № </label>
-                <input v-if="person.schoolTitle" v-model="person.schoolTitle" disabled>
-                <select v-show="!person.schoolTitle"
-                        v-model="person.schoolId"
-                >
-                  <option v-for="school in schools" :key="school.id" :value="school.id">
-                    {{ school.name }}
-                  </option>
-                </select>
-              </div>
+            <div class="call-history-buttons">
+                <button @click="showHistory" :class="{ 'active-button' : showCallHistoryTable }">
+                    {{ $lang.words.historyAppeals }}
+                </button>
+                <button @click="showQuestion" :class="{ 'active-button' : showNewQuestion }">
+                    {{ $lang.words.answerQuestion }}
+                </button>
+                <button @click="showClient" :class="{ 'active-button' : showInfoClient }">
+                    {{ $lang.words.customerInfo }}
+                </button>
             </div>
-          </form>
+            <div v-if="showCallHistoryTable">
+                <CallHistoryTable
+                        v-if="renderComponent"
+                        :data="data"
+                        :page-data="pageData"
+                        :call-type="callType"
+                        :phone="phone"
+                        @answerQuestion="answerQuestion"
+                />
+            </div>
+            <div v-if="showNewQuestion">
+                <CallNewQuestion
+                        v-if="renderComponent"
+                        :person="personChanged"
+                        :call-type="callType"
+                        :data="firstData"
+                        :update-or-not="updateQuestionary"
+                        v-on:check="saveData"
+                />
+            </div>
+            <div v-if="showInfoClient">
+                <CallClientInfo
+                        v-if="renderComponent"
+                        :person="personChanged"
+                        :school="school"
+                        :students="students"
+                />
+            </div>
         </div>
-      </div>
-      <div class="call-history-buttons">
-        <button @click="showHistory" :class="{ 'active-button' : showCallHistoryTable }">
-          {{ $lang.words.historyAppeals }}
-        </button>
-        <button @click="showQuestion" :class="{ 'active-button' : showNewQuestion }">
-          {{ $lang.words.answerQuestion }}
-        </button>
-        <button @click="showClient" :class="{ 'active-button' : showInfoClient }">
-          {{ $lang.words.customerInfo }}
-        </button>
-      </div>
-      <div v-if="showCallHistoryTable">
-        <CallHistoryTable
-          v-if="renderComponent"
-          :data="data"
-          :page-data="pageData"
-          :call-type="callType"
-          :phone="phone"
-          @answerQuestion="answerQuestion"
-        />
-      </div>
-      <div v-if="showNewQuestion">
-        <CallNewQuestion
-          v-if="renderComponent"
-          :person="personChanged"
-          :call-type="callType"
-          :data="firstData"
-          :update-or-not="updateQuestionary"
-          v-on:check="saveData"
-        />
-      </div>
-      <div v-if="showInfoClient">
-        <CallClientInfo
-          v-if="renderComponent"
-          :person="personChanged"
-          :school="school"
-        />
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
-import { locationService } from '@/_services/location/location.service';
-import { questionaryService } from '@/_services/questionary.service';
-import Header from '@/components/header/Header';
-import CallHistoryTable from '@/components/call-history/CallHistoryTable';
-import CallNewQuestion from '@/components/call-history/CallNewQuestion';
-import CallClientInfo from '@/components/call-history/CallClientInfo';
-import { personService } from '@/_services/person.service';
-import { schoolService } from '@/_services/school.service';
-import moment from 'moment';
-import PreLoader from '@/components/preloader/PreLoader';
+    import { locationService } from '@/_services/location/location.service';
+    import { parentStudentService } from '@/_services/parent-student.service';
+    import { questionaryService } from '@/_services/questionary.service';
+    import Header from '@/components/header/Header';
+    import CallHistoryTable from '@/components/call-history/CallHistoryTable';
+    import CallNewQuestion from '@/components/call-history/CallNewQuestion';
+    import CallClientInfo from '@/components/call-history/CallClientInfo';
+    import { personService } from '@/_services/person.service';
+    import { schoolService } from '@/_services/school.service';
+    import moment from 'moment';
+    import PreLoader from '@/components/preloader/PreLoader';
 
-moment.locale('ru');
+    moment.locale('ru');
 
-export default {
-    name: 'CallHistoryOutgoing',
-    components:{
-        CallCenterHeader: Header,
-        CallHistoryTable,
-        CallNewQuestion,
-        CallClientInfo,
-        PreLoader,
-    },
-    // eslint-disable-next-line vue/require-prop-types
-    props: [ 'questionaryToAnswer' ],
-    data ()
-    {
-        return {
-            loading: false,
-            showCallHistoryTable: true,
-            showNewQuestion: false,
-            showInfoClient: false,
-            phone:'',
-            submitted: false,
-            person:{
-                name:'',
-                surname:'',
-                patronymic: '',
-                repliedAt:'',
-                extraPhone:'',
-                personType:1,
-                schoolTitle:'',
-            },
-            dateNow:moment(),
-            school: {
-                rayon: {
-                    id: null,
-                    title: '',
-                },
-                region: {
-                    id: null,
-                    title: '',
-                },
-            },
-            validPhone:false,
-            selectedPerson: null,
-            callType:'',
-            parentType: [
-                {
-                    id:1,
-                    name: 'parent',
-                },
-                {
-                    id:2,
-                    name: 'student',
-                },
-                {
-                    id:3,
-                    name: 'other',
-                }
-            ],
-            renderComponent: true,
-            data: [],
-            updateQuestionary: false,
-            pageData: {
-                page: {
-                    number: 0,
-                    size: 0,
-                    totalPages: 0,
-                }
-            },
-            firstData: [],
-            regions: [],
-            rayons: [],
-            schools: [],
-        };
-    },
-    computed: {
-        personChanged: function () {
-            this.person.repliedAt= moment(this.dateNow).format('DD.MM.YYYY HH:mm');
-            return this.person;
+    export default {
+        name: 'CallHistoryOutgoing',
+        components: {
+            CallCenterHeader: Header,
+            CallHistoryTable,
+            CallNewQuestion,
+            CallClientInfo,
+            PreLoader,
         },
-    },
-    created () {
-        this.checkCallType();
-        this.checkAnswerCall();
-        this.fetchRegions();
-    },
-    methods: {
-        checkPhone (e)
-        {
-            if (e.target.value.length === 0)
-            {
-                this.person = {
+        // eslint-disable-next-line vue/require-prop-types
+        props: ['questionaryToAnswer'],
+        data () {
+            return {
+                loading: false,
+                showCallHistoryTable: true,
+                showNewQuestion: false,
+                showInfoClient: false,
+                phone: '',
+                submitted: false,
+                person: {
                     name: '',
                     surname: '',
                     patronymic: '',
-                    schoolTitle: '',
+                    repliedAt: '',
                     extraPhone: '',
-                };
-                this.school = {
+                    personType: 1,
+                    schoolTitle: '',
+                },
+                dateNow: moment(),
+                school: {
                     rayon: {
+                        id: null,
                         title: '',
                     },
                     region: {
+                        id: null,
                         title: '',
+                    },
+                },
+                validPhone: false,
+                selectedPerson: null,
+                callType: '',
+                parentType: [
+                    {
+                        id: 1,
+                        name: 'parent',
+                    },
+                    {
+                        id: 2,
+                        name: 'student',
+                    },
+                    {
+                        id: 3,
+                        name: 'other',
                     }
-                };
-                this.data = [];
-            }
-            if (e.target.value.length >=1)
-            {
-                this.fetchPersonWithPhone(this.phone);
-            }
+                ],
+                renderComponent: true,
+                data: [],
+                updateQuestionary: false,
+                pageData: {
+                    page: {
+                        number: 0,
+                        size: 0,
+                        totalPages: 0,
+                    }
+                },
+                firstData: [],
+                regions: [],
+                rayons: [],
+                schools: [],
+                students: [],
+            };
         },
-        fetchPersonWithPhone (phone)
-        {
-            personService.getByPhone(phone).then(res => {
-                if (res)
-                {
-                    this.person = res;
-                    this.person.personType = 1;
-                    this.person.repliedAt = '';
-                    this.person.extraPhone = '';
-                    if(res.schoolId){
-                        this.fetchSchool(res.schoolId);
-                    }
-                    this.fetchData(phone);
-                    this.loading = false;
-                }
-                else {
+        computed: {
+            personChanged: function () {
+                this.person.repliedAt = moment(this.dateNow).format('DD.MM.YYYY HH:mm');
+                return this.person;
+            },
+        },
+        created () {
+            this.checkCallType();
+            this.checkAnswerCall();
+            this.fetchRegions();
+        },
+        methods: {
+            checkPhone (e) {
+                if (e.target.value.length === 0) {
                     this.person = {
-                        personType: 1,
-                        repliedAt: '',
-                        extraPhone: '',
                         name: '',
                         surname: '',
                         patronymic: '',
                         schoolTitle: '',
-                        phone: phone,
+                        extraPhone: '',
                     };
-                    this.school.region.title = '';
-                    this.school.region.id = null;
-                    this.school.rayon.title = '';
-                    this.school.rayon.id = null;
-                    this.loading = false;
-                    this.firstData = [];
-                }
-            }).then(() => {
-                if (this.showCallHistoryTable)
-                {
-                    this.fetchData(this.person.phone);
-                }
-                else if (this.showNewQuestion){
-                    this.formatDate();
-                }
-                this.forceRerender();
-            }).catch(err => console.log(err));
-        },
-        fetchSchool (id){
-            schoolService.getById(id).then(res => {
-                if (res)
-                {
-                    this.school = res;
-                }
-                else {
                     this.school = {
-                        region: {
+                        rayon: {
                             title: '',
                         },
-                        rayon: {
+                        region: {
                             title: '',
                         }
                     };
+                    this.data = [];
                 }
-            }).catch(err => console.log(err));
-        },
-        showHistory ()
-        {
-            if (!this.showCallHistoryTable) {
-                this.showCallHistoryTable = true;
-                this.showNewQuestion = false;
-                this.showInfoClient = false;
-                this.fetchData(this.person.phone);
-            }
-
-        },
-        showQuestion ()
-        {
-            if (!this.showNewQuestion) {
-                this.showCallHistoryTable = false;
-                this.showNewQuestion = true;
-                this.showInfoClient = false;
-            }
-        },
-        showClient ()
-        {
-            if (!this.showInfoClient) {
-                this.showCallHistoryTable = false;
-                this.showNewQuestion = false;
-                this.showInfoClient = true;
-            }
-        },
-        saveData ()
-        {
-            this.submitted = true;
-            this.$validator.validate().then(valid => {
-                if (valid){
-                    console.log(this.errors);
+                if (e.target.value.length >= 1) {
+                    this.fetchPersonWithPhone(this.phone);
                 }
-            });
-        },
-        checkCallType ()
-        {
-            if (this.$route.path === '/call-history'){
-                this.callType = 1;
-            }
-            else if (this.$route.path === '/call-history-outgoing')
-            {
-                this.callType = 2;
-            }
-        },
-        formatDate () {
-            this.person.repliedAt= moment(this.dateNow).format('DD.MM.YYYY HH:mm');
-        },
-        forceRerender () {
-            this.renderComponent = false;
-            this.$nextTick(() => {
-                this.renderComponent = true;
-            });
-        },
-        fetchData (phone)
-        {
-            questionaryService.getByPhone(phone).then(res => {
-                if (res['_embedded'])
-                {
-                    this.data = res['_embedded']['questionaryResourceList'];
-                    this.firstData = res['_embedded']['questionaryResourceList'].filter(item => item.replied === 2)[0];
-                    if(this.firstData)
-                    {
-                        this.updateQuestionary = true;
+            },
+            fetchPersonWithPhone (phone) {
+                personService.getByPhone(phone).then(res => {
+                    if (res) {
+                        parentStudentService.getByPerson(res.id).then(res => {
+                            if(res['_embedded']){
+                                this.students = res['_embedded']['parentStudentResourceList'];
+                            } else {
+                                this.students = [];
+                            }
+                        }).catch(err => console.log(err));
+                        this.person = res;
+                        this.person.personType = 1;
+                        this.person.repliedAt = '';
+                        this.person.extraPhone = '';
+                        if (res.schoolId) {
+                            this.fetchSchool(res.schoolId);
+                        }
+                        this.fetchData(phone);
+                        this.loading = false;
+                    } else {
+                        this.person = {
+                            personType: 1,
+                            repliedAt: '',
+                            extraPhone: '',
+                            name: '',
+                            surname: '',
+                            patronymic: '',
+                            schoolTitle: '',
+                            phone: phone,
+                        };
+                        this.school.region.title = '';
+                        this.school.region.id = null;
+                        this.school.rayon.title = '';
+                        this.school.rayon.id = null;
+                        this.loading = false;
+                        this.students = [];
+                        this.firstData = [];
                     }
+                }).then(() => {
+                    if (this.showCallHistoryTable) {
+                        this.fetchData(this.person.phone);
+                    } else if (this.showNewQuestion) {
+                        this.formatDate();
+                    }
+                    this.forceRerender();
+                }).catch(err => console.log(err));
+            },
+            fetchSchool (id) {
+                schoolService.getById(id).then(res => {
+                    if (res) {
+                        this.school = res;
+                    } else {
+                        this.school = {
+                            region: {
+                                title: '',
+                            },
+                            rayon: {
+                                title: '',
+                            }
+                        };
+                    }
+                }).catch(err => console.log(err));
+            },
+            showHistory () {
+                if (!this.showCallHistoryTable) {
+                    this.showCallHistoryTable = true;
+                    this.showNewQuestion = false;
+                    this.showInfoClient = false;
+                    this.fetchData(this.person.phone);
                 }
-                else {
-                  this.data = [];
-                  this.firstData = [];
+
+            },
+            showQuestion () {
+                if (!this.showNewQuestion) {
+                    this.showCallHistoryTable = false;
+                    this.showNewQuestion = true;
+                    this.showInfoClient = false;
+                }
+            },
+            showClient () {
+                if (!this.showInfoClient) {
+                    this.showCallHistoryTable = false;
+                    this.showNewQuestion = false;
+                    this.showInfoClient = true;
+                }
+            },
+            saveData () {
+                this.submitted = true;
+                this.$validator.validate().then(valid => {
+                    if (valid) {
+                        console.log(this.errors);
+                    }
+                });
+            },
+            checkCallType () {
+                if (this.$route.path === '/call-history') {
+                    this.callType = 1;
+                } else if (this.$route.path === '/call-history-outgoing') {
+                    this.callType = 2;
+                }
+            },
+            formatDate () {
+                this.person.repliedAt = moment(this.dateNow).format('DD.MM.YYYY HH:mm');
+            },
+            forceRerender () {
+                this.renderComponent = false;
+                this.$nextTick(() => {
+                    this.renderComponent = true;
+                });
+            },
+            fetchData (phone) {
+                questionaryService.getByPhone(phone).then(res => {
+                    if (res['_embedded']) {
+                        this.data = res['_embedded']['questionaryResourceList'];
+                        this.firstData = res['_embedded']['questionaryResourceList'].filter(item => item.replied === 2)[0];
+                        if (this.firstData) {
+                            this.updateQuestionary = true;
+                        }
+                    } else {
+                        this.data = [];
+                        this.firstData = [];
+                        this.updateQuestionary = false;
+                    }
+                }).catch(err => console.log(err));
+            },
+            checkAnswerCall () {
+                if (this.questionaryToAnswer) {
+                    this.showQuestion();
+                    this.phone = this.questionaryToAnswer.phone;
+                    this.person.schoolTitle = this.questionaryToAnswer.schoolName;
+                    this.person.personType = this.questionaryToAnswer.personType;
+                    this.person.extraPhone = this.questionaryToAnswer.extraPhone;
+                    this.person.name = this.questionaryToAnswer.firstName;
+                    this.person.surname = this.questionaryToAnswer.lastName;
+                    this.person.patronymic = this.questionaryToAnswer.patronymic;
+                    this.person.phone = this.questionaryToAnswer.phone;
+                    this.person.schoolId = this.questionaryToAnswer.schoolId;
+                    if (this.questionaryToAnswer.schoolId) {
+                        this.fetchSchool(this.questionaryToAnswer.schoolId);
+                    }
+                    this.firstData = this.questionaryToAnswer;
+                    this.updateQuestionary = true;
+                } else {
+                    console.log(false);
                     this.updateQuestionary = false;
                 }
-            }).catch(err => console.log(err));
-        },
-        checkAnswerCall ()
-        {
-            if (this.questionaryToAnswer)
-            {
+            },
+            answerQuestion (question) {
+                this.firstData = question;
                 this.showQuestion();
-                this.phone = this.questionaryToAnswer.phone;
-                this.person.schoolTitle = this.questionaryToAnswer.schoolName;
-                this.person.personType = this.questionaryToAnswer.personType;
-                this.person.extraPhone = this.questionaryToAnswer.extraPhone;
-                this.person.name = this.questionaryToAnswer.firstName;
-                this.person.surname = this.questionaryToAnswer.lastName;
-                this.person.patronymic = this.questionaryToAnswer.patronymic;
-                this.person.phone = this.questionaryToAnswer.phone;
-                this.person.schoolId = this.questionaryToAnswer.schoolId;
-                if(this.questionaryToAnswer.schoolId){
-                    this.fetchSchool(this.questionaryToAnswer.schoolId);
-                }
-                this.firstData = this.questionaryToAnswer;
-                this.updateQuestionary = true;
-            } else {
-                console.log(false);
-                this.updateQuestionary = false;
+            },
+            fetchRegions () {
+                locationService.getRegions().then(res => {
+                    if (res) {
+                        this.regions = res.content;
+                    } else {
+                        this.regions = [];
+                    }
+                }).catch(err => console.log(err));
+            },
+            fetchRayon (id) {
+                locationService.getRayonByRegion(id).then(res => {
+                    this.rayons = res;
+                }).catch(err => console.log(err));
+            },
+            fetchSchools (id) {
+                schoolService.getByRayon(id).then(res => {
+                    this.schools = res;
+                }).catch(err => console.log(err));
             }
         },
-        answerQuestion (question)
-        {
-            this.firstData = question;
-            this.showQuestion();
-        },
-        fetchRegions ()
-        {
-          locationService.getRegions().then(res => {
-            if (res)
-            {
-              this.regions = res.content;
-            } else { this.regions = []; }
-          }).catch(err => console.log(err));
-        },
-        fetchRayon (id)
-        {
-          locationService.getRayonByRegion(id).then(res => {
-            this.rayons = res;
-          }).catch(err => console.log(err));
-        },
-        fetchSchools (id)
-        {
-          schoolService.getByRayon(id).then(res => {
-            this.schools = res;
-          }).catch(err => console.log(err));
-        }
-    },
 
 
-};
+    };
 </script>
 
 <style lang="scss" scoped>
     @font-face {
         font-family: Helvetica;
     }
-    .call-history-container{
+
+    .call-history-container {
         width: 100%;
         height: 100vh;
         display: table;
         background-color: #f3f3f3;
     }
-    .call-history-content{
+
+    .call-history-content {
         width: 100%;
         margin: 50px 30px 50px 60px;
 
     }
-    .profile-header{
+
+    .profile-header {
         margin-bottom: 30px;
         margin-left: 20px;
-        span{
+
+        span {
             color: #ee7739;
             font-size: 18px;
             font-weight: normal;
@@ -490,10 +478,12 @@ export default {
             letter-spacing: 0.07px;
         }
     }
-    .call-history-form{
-        form{
+
+    .call-history-form {
+        form {
             display: flex;
-            label{
+
+            label {
                 min-width: 120px;
                 text-align: right;
                 padding-right: 10px;
@@ -504,20 +494,24 @@ export default {
                 letter-spacing: 0.06px;
                 color: #707070;
             }
-            .ant-calendar-picker-input{
+
+            .ant-calendar-picker-input {
                 border: none;
-                height: 29px!important;
+                height: 29px !important;
             }
-            input{
+
+            input {
                 width: 60%;
                 height: 29px;
                 background-color: #ffffff;
                 padding-left: 10px;
             }
-            input::-webkit-input-placeholder{
+
+            input::-webkit-input-placeholder {
                 opacity: 0.4;
             }
-            select{
+
+            select {
                 width: 40%;
                 height: 29px;
                 background-color: #ffffff;
@@ -525,47 +519,58 @@ export default {
                 text-align-last: center;
             }
         }
-        .column-one{
+
+        .column-one {
             width: 30%;
             margin: 0 5% 0 0;
         }
-        .column-two{
+
+        .column-two {
             width: 60%;
-            label{
+
+            label {
                 width: 200px;
                 padding-right: 5px;
                 padding-left: 10px;
             }
-            .region{
+
+            .region {
                 width: 50px !important;
                 text-align: center;
             }
-            input{
+
+            input {
                 width: 40%;
             }
-            .save{
+
+            .save {
                 margin: 20px 0;
                 float: right;
                 width: 129.7px;
                 height: 37px;
                 background-color: #ee7739;
-                button{
+
+                button {
                     width: 100%;
                     height: 100%;
                 }
             }
         }
-        .is-invalid{
+
+        .is-invalid {
             border: 1px solid red;
         }
 
     }
-    .divider{
+
+    .divider {
         height: 38px;
     }
-    .call-history-buttons{
+
+    .call-history-buttons {
         margin: 30px 6%;
-        button{
+
+        button {
             width: 250px;
             height: 48px;
             background-color: #ffffff;
@@ -578,9 +583,9 @@ export default {
             margin: 0 20px;
         }
     }
-    .active-button
-    {
+
+    .active-button {
         background-color: #ee7739 !important;
-        color: white!important;
+        color: white !important;
     }
 </style>

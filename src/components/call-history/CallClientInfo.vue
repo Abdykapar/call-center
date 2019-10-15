@@ -20,10 +20,10 @@
             <span>{{ person.schoolTitle }}</span>
           </div>
         </div>
-        <div class="item">
-          <label>{{ $lang.words.region }}</label>
+        <div class="item" v-for="student in students" :key="student.id">
+          <label>Имя ученика</label>
           <div class="info">
-            <span>{{ school.region.title }}</span>
+            <span>{{ student.studentTitle }}</span>
           </div>
         </div>
       </div>
@@ -46,6 +46,12 @@
             <span>{{ school.rayon.title }}</span>
           </div>
         </div>
+        <div class="item" v-for="student in students" :key="student.id">
+          <label>Класс ученика</label>
+          <div class="info">
+            <span>{{ student.studentClassTitle }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -54,7 +60,7 @@
 <script>
 export default {
     name: 'CallClientInfo',
-    props: [ 'person','school' ],
+    props: [ 'person','school', 'students' ],
     data (){
         return {
             fullName: '',
@@ -83,7 +89,7 @@ export default {
             font-stretch: normal;
             letter-spacing: 0.07px;
             color: #ee7739;
-            width: 100px;
+            width: 200px;
             padding-top: 10px;
         }
         span{
