@@ -51,4 +51,6 @@ module.exports = {
     save: 'Save',
     edit_questionary: 'Edit questionnaire',
     successMessage: 'Successfully!!!',
+    otherCategory: 'Other',
+    addCategory: 'New category',
 };

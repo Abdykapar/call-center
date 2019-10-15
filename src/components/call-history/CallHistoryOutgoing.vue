@@ -27,10 +27,6 @@
                 <label>{{ $lang.words.name }}</label>
                 <input
                         v-model="person.name"
-                        name="name"
-                        v-validate
-                        data-vv-rules="required"
-                        :class="{ 'is-invalid' : submitted && errors.has('name') }"
                 >
               </div>
               <div>
@@ -74,10 +70,6 @@
                         v-show="!school.region.title"
                         v-model="school.region.id"
                         @change="fetchRayon(school.region.id)"
-                        name="region"
-                        v-validate
-                        data-vv-rules="required"
-                        :class="{ 'is-invalid' : submitted && errors.has('region') }"
                 >
                   <option v-for="region in regions" :key="region.id" :value="region.id">
                     {{ region.title }}
@@ -92,9 +84,6 @@
                 <select v-show="!school.rayon.title"
                         v-model="school.rayon.id"
                         @change="fetchSchools(school.rayon.id)"
-                        v-validate="'required'"
-                        name="rayon"
-                        :class="{ 'is-invalid' : submitted && errors.has('rayon') }"
                 >
                   <option v-for="rayon in rayons" :key="rayon.id" :value="rayon.id">
                     {{ rayon.title }}
@@ -106,9 +95,6 @@
                 <input v-if="person.schoolTitle" v-model="person.schoolTitle" disabled>
                 <select v-show="!person.schoolTitle"
                         v-model="person.schoolId"
-                        name="school"
-                        v-validate="'required'"
-                        :class="{ 'is-invalid' : submitted && errors.has('school') }"
                 >
                   <option v-for="school in schools" :key="school.id" :value="school.id">
                     {{ school.name }}

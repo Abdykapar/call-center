@@ -51,4 +51,6 @@ module.exports = {
     save: 'Сактоо',
     edit_questionary: 'Анкетаны өзгөртүү',
     successMessage: 'Ийгиликтүү!!!',
+    otherCategory: 'Башка',
+    addCategory: 'Жаңы категория',
 };

@@ -57,8 +57,8 @@
                             <div class="form-group">
                                 <label for="changeCall">{{ $lang.words.callType }}</label>
                                 <select v-model="question.callType" class="form-control" id="changeCall">
-                                    <option value="1">{{ $lang.words.incoming }}</option>
-                                    <option value="2">{{ $lang.words.outgoing }}</option>
+                                    <option :key="1" :value="1">{{ $lang.words.incoming }}</option>
+                                    <option :key="2" :value="2">{{ $lang.words.outgoing }}</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -307,7 +307,10 @@
                     schoolId: this.question.schoolId
                 };
                 questionaryService.update(newQuestion).then(res => {
+					this.question.repliedAt = moment(this.date).format('DD.MM.YYYY HH:mm');
+                    this.question.shortQuestion = this.question.question.substring(0, 20);
                     this.question.categoryTitle = this.categories.find(item => item.id === this.question.categoryId).title;
+                    this.question.callType = parseInt(this.question.callType);
                     this.$set(this.questions, this.index, this.question);
                     this.$toaster.success(this.$lang.words.successMessage,{timeout: 3000});
                 }).catch(err => console.log(err));

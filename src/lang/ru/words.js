@@ -51,4 +51,6 @@ module.exports = {
     save: 'Сохранить',
     edit_questionary: 'Изменить анкету',
     successMessage: 'Успешно!!!',
+    otherCategory: 'Другое',
+    addCategory: 'Новый категория',
 };
