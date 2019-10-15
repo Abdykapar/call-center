@@ -354,14 +354,12 @@ export default {
         },
         saveData ()
         {
-            if(this.$validator.fields.find({ name: 'region' }) !== undefined) {
-                this.submitted = true;
-                this.$validator.validate().then(valid => {
-                    if (valid) {
-                        console.log(this.phone);
-                    }
-                });
-            }
+            this.submitted = true;
+            this.$validator.validate().then(valid => {
+                if (valid) {
+                    console.log(this.phone);
+                }
+            });
         },
         checkCallType ()
         {

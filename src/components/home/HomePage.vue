@@ -63,8 +63,10 @@
     import { questionaryService } from '@/_services/questionary.service';
     import Header from '@/components/header/Header';
     import PreLoader from '@/components/preloader/PreLoader';
+    import moment from 'moment';
 
-    const columns = [{
+    const columns = [
+        {
         slots: { title: 'callTitle' },
         dataIndex: 'callType',
         scopedSlots: { customRender: 'callType' },
@@ -117,7 +119,7 @@
     }];
 
     function onChange (pagination, filters, sorter) {
-        console.log('params', pagination, filters, sorter);
+        // console.log('params', pagination, filters, sorter);
     }
 
     export default {

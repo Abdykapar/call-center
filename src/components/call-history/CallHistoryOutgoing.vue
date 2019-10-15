@@ -15,11 +15,11 @@
                 <input
                         v-model="phone"
                         v-validate="'required'"
-                        maxlength="10"
+                        maxlength="15"
                         type="text"
                         placeholder="0556256585"
                         name="phone"
-                        :class="{'is-invalid': (submitted && errors.has('phone')) || validPhone}"
+                        :class="{'is-invalid': (submitted && errors.has('phone'))}"
                         @keyup="checkPhone($event)"
                 >
               </div>
@@ -248,36 +248,28 @@ export default {
     methods: {
         checkPhone (e)
         {
-            this.loading = true;
-            if (isNaN(e.target.value)){
-                this.validPhone = true;
-                this.loading = false;
-            } else {
-                this.validPhone = false;
-                if (e.target.value.length === 0)
-                {
-                    this.person = {
-                        name: '',
-                        surname: '',
-                        patronymic: '',
-                        schoolTitle: '',
-                        extraPhone: '',
-                    };
-                    this.school = {
-                        rayon: {
-                            title: '',
-                        },
-                        region: {
-                            title: '',
-                        }
-                    };
-                    this.data = [];
-                }
-                if (e.target.value.length >=1)
-                {
-                    this.fetchPersonWithPhone(this.phone);
-                }
-                this.loading = false;
+            if (e.target.value.length === 0)
+            {
+                this.person = {
+                    name: '',
+                    surname: '',
+                    patronymic: '',
+                    schoolTitle: '',
+                    extraPhone: '',
+                };
+                this.school = {
+                    rayon: {
+                        title: '',
+                    },
+                    region: {
+                        title: '',
+                    }
+                };
+                this.data = [];
+            }
+            if (e.target.value.length >=1)
+            {
+                this.fetchPersonWithPhone(this.phone);
             }
         },
         fetchPersonWithPhone (phone)
@@ -289,7 +281,9 @@ export default {
                     this.person.personType = 1;
                     this.person.repliedAt = '';
                     this.person.extraPhone = '';
-                    this.fetchSchool(res.schoolId);
+                    if(res.schoolId){
+                        this.fetchSchool(res.schoolId);
+                    }
                     this.fetchData(phone);
                     this.loading = false;
                 }
@@ -427,7 +421,9 @@ export default {
                 this.person.patronymic = this.questionaryToAnswer.patronymic;
                 this.person.phone = this.questionaryToAnswer.phone;
                 this.person.schoolId = this.questionaryToAnswer.schoolId;
-                this.fetchSchool(this.questionaryToAnswer.schoolId);
+                if(this.questionaryToAnswer.schoolId){
+                    this.fetchSchool(this.questionaryToAnswer.schoolId);
+                }
                 this.firstData = this.questionaryToAnswer;
                 this.updateQuestionary = true;
             } else {

@@ -87,7 +87,6 @@
                 submitted: false,
                 categories: '',
                 checkAnswer: false,
-                categoryRequired: false,
                 newCategory: {},
                 showNewCategory: false,
             };
@@ -120,16 +119,10 @@
                 this.saveQuestionary();
             },
             saveQuestionary () {
-                this.categoryRequired = this.questionary.questionCategoryId === 0;
+                this.$emit('check');
                 this.submitted = true;
                 this.$validator.validate().then(valid => {
                     if (valid && this.person.phone) {
-                        if(this.newCategory){
-                            // questionCategoryService.create(this.newCategory).then(res => {
-                            //     console.log(res);
-                            //     this.newCategory = {};
-                            // }).catch(err => console.log(err));
-                        }
                         this.questionary.repliedAt = this.person.repliedAt;
                         this.questionary.extraPhone = this.person.extraPhone;
                         this.questionary.personType = this.person.personType;
@@ -142,25 +135,34 @@
                         this.questionary.answer = this.updatedData.answer;
                         this.questionary.comment = this.updatedData.comment;
                         this.questionary.question = this.updatedData.question;
-                        this.questionary.questionCategoryId = this.updatedData.categoryId;
-                        if (this.updateOrNot) {
-                            this.questionary.id = this.updatedData.uuid;
-                            questionaryService.update(this.questionary).then(res => {
-                                this.$toaster.success(this.$lang.words.successMessage, { timeout: 3000 });
-                                this.$router.push('/');
-                            }).catch(err => {
-                                console.log(err);
-                                this.$toaster.error(this.$lang.words.error, { timeout: 3000 });
-                            });
-                        } else {
-                            questionaryService.create(this.questionary).then(res => {
-                                this.$router.push('/');
-                                this.$toaster.success(this.$lang.words.successMessage, { timeout: 3000 });
+                        if(this.newCategory.title){
+                            questionCategoryService.create(this.newCategory).then(res => {
+                                this.postData(res.id);
+                                this.newCategory = {};
                             }).catch(err => console.log(err));
+                        } else {
+                            this.postData(this.updatedData.categoryId);
                         }
-
                     }
                 }).catch(err => console.log(err));
+            },
+            postData(categoryId){
+                this.questionary.questionCategoryId = categoryId;
+                if (this.updateOrNot) {
+                    this.questionary.id = this.updatedData.uuid;
+                    questionaryService.update(this.questionary).then(res => {
+                        this.$toaster.success(this.$lang.words.successMessage, { timeout: 3000 });
+                        this.$router.push('/');
+                    }).catch(err => {
+                        console.log(err);
+                        this.$toaster.error(this.$lang.words.error, { timeout: 3000 });
+                    });
+                } else {
+                    questionaryService.create(this.questionary).then(res => {
+                        this.$router.push('/');
+                        this.$toaster.success(this.$lang.words.successMessage, { timeout: 3000 });
+                    }).catch(err => console.log(err));
+                }
             },
             fetchCategories () {
                 questionCategoryService.getAll().then(res => {
@@ -168,11 +170,8 @@
                 }).catch(err => console.log(err));
             },
             checkCategory(categoryId){
-                if(categoryId === '0'){
-                    this.showNewCategory = true;
-                } else {
-                    this.showNewCategory = false;
-                }
+                this.newCategory = {};
+                this.showNewCategory = categoryId === '0';
             }
         }
     };
