@@ -284,7 +284,7 @@
                     };
                     this.data = [];
                 }
-                if (e.length >= 4) {
+                if (e.length >= 4 && !isNaN(e)) {
                     this.fetchPersonWithPhone(e);
                 }
             },
