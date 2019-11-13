@@ -12,16 +12,30 @@
                         <div class="column-one">
                             <div>
                                 <label>{{ $lang.words.phone }}</label>
-                                <input
-                                        v-model="phone"
-                                        v-validate="'required'"
-                                        maxlength="15"
-                                        type="text"
-                                        placeholder="0556256585"
-                                        name="phone"
-                                        :class="{'is-invalid': (submitted && errors.has('phone'))}"
-                                        @keyup="checkPhone($event)"
+<!--                                <input-->
+<!--                                        v-model="phone"-->
+<!--                                        v-validate="'required'"-->
+<!--                                        maxlength="15"-->
+<!--                                        type="text"-->
+<!--                                        placeholder="0556256585"-->
+<!--                                        name="phone"-->
+<!--                                        :class="{'is-invalid': (submitted && errors.has('phone'))}"-->
+<!--                                        @keyup="checkPhone($event)"-->
+<!--                                >-->
+                                <a-select
+                                        showSearch
+                                        :value="phone"
+                                        placeholder="input search text"
+                                        style="width: 200px"
+                                        :defaultActiveFirstOption="false"
+                                        :showArrow="false"
+                                        :filterOption="false"
+                                        @search="checkPhone"
+                                        @change="handleChange"
+                                        :notFoundContent="null"
                                 >
+                                    <a-select-option v-for="d in parents" :key="d.id">{{d.name}} {{ d.surname }}</a-select-option>
+                                </a-select>
                             </div>
                             <div>
                                 <label>{{ $lang.words.name }}</label>
@@ -234,6 +248,7 @@
                 rayons: [],
                 schools: [],
                 students: [],
+                parents: [],
             };
         },
         computed: {
@@ -249,7 +264,9 @@
         },
         methods: {
             checkPhone (e) {
-                if (e.target.value.length === 0) {
+                this.phone = e;
+                if (e.length < 4) {
+                    this.parents = [];
                     this.person = {
                         name: '',
                         surname: '',
@@ -267,30 +284,33 @@
                     };
                     this.data = [];
                 }
-                if (e.target.value.length >= 1) {
-                    this.fetchPersonWithPhone(this.phone);
+                if (e.length >= 4) {
+                    this.fetchPersonWithPhone(e);
                 }
+            },
+            handleChange(e) {
+                this.person = this.parents.find(item => item.id === e);
+                if (this.person.schoolId) {
+                    this.fetchSchool(this.person.schoolId);
+                }
+                this.person.personType = 1;
+                this.person.repliedAt = '';
+                this.person.extraPhone = '';
+                parentStudentService.getByPerson(this.person.id).then(res => {
+                    if(res['_embedded']){
+                        this.students = res['_embedded']['parentStudentResourceList'];
+                    } else {
+                        this.students = [];
+                    }
+                }).catch(err => console.log(err));
             },
             fetchPersonWithPhone (phone) {
                 personService.getByPhone(phone).then(res => {
                     if (res) {
-                        parentStudentService.getByPerson(res.id).then(res => {
-                            if(res['_embedded']){
-                                this.students = res['_embedded']['parentStudentResourceList'];
-                            } else {
-                                this.students = [];
-                            }
-                        }).catch(err => console.log(err));
-                        this.person = res;
-                        this.person.personType = 1;
-                        this.person.repliedAt = '';
-                        this.person.extraPhone = '';
-                        if (res.schoolId) {
-                            this.fetchSchool(res.schoolId);
-                        }
-                        this.fetchData(phone);
+                        this.parents = res;
                         this.loading = false;
                     } else {
+                        this.parents = [];
                         this.person = {
                             personType: 1,
                             repliedAt: '',
@@ -311,7 +331,7 @@
                     }
                 }).then(() => {
                     if (this.showCallHistoryTable) {
-                        this.fetchData(this.person.phone);
+                        this.fetchData(this.phone);
                     } else if (this.showNewQuestion) {
                         this.formatDate();
                     }
