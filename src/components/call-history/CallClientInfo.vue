@@ -26,6 +26,12 @@
             <span>{{ student.studentTitle }}</span>
           </div>
         </div>
+        <div class="item">
+          <label>{{ $lang.words.login }}</label>
+          <div class="info">
+            <span>{{ person.username }}</span>
+          </div>
+        </div>
       </div>
       <div class="column-right">
         <div class="item">

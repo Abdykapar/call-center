@@ -53,4 +53,5 @@ module.exports = {
     successMessage: 'Ийгиликтүү!!!',
     otherCategory: 'Башка',
     addCategory: 'Жаңы категория',
+    login: 'Логин',
 };

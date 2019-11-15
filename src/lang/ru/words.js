@@ -53,4 +53,5 @@ module.exports = {
     successMessage: 'Успешно!!!',
     otherCategory: 'Другое',
     addCategory: 'Новый категория',
+    login: 'Логин',
 };

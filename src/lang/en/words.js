@@ -53,4 +53,5 @@ module.exports = {
     successMessage: 'Successfully!!!',
     otherCategory: 'Other',
     addCategory: 'New category',
+    login: 'Login',
 };
