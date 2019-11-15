@@ -33,6 +33,7 @@
                                         @search="checkPhone"
                                         @change="handleChange"
                                         :notFoundContent="null"
+                                        :defaultValue="phone"
                                 >
                                     <a-select-option v-for="d in parents" :key="d.id">{{d.name}} {{ d.surname }}</a-select-option>
                                 </a-select>
@@ -273,6 +274,7 @@
                         patronymic: '',
                         schoolTitle: '',
                         extraPhone: '',
+                        phone: this.phone,
                     };
                     this.school = {
                         rayon: {
@@ -306,7 +308,7 @@
             },
             fetchPersonWithPhone (phone) {
                 personService.getByPhone(phone).then(res => {
-                    if (res) {
+                    if (res.length) {
                         this.parents = res;
                         this.loading = false;
                     } else {

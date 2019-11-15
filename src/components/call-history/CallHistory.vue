@@ -264,6 +264,7 @@
                         patronymic: '',
                         schoolTitle: '',
                         extraPhone: '',
+                        phone: this.phone,
                     };
                     this.school = {
                         rayon: {
@@ -277,9 +278,8 @@
                 }
                 if (e.length >= 4 && !isNaN(e)) {
                     personService.getByPhone(e).then(res => {
-                        if (res) {
+                        if (res.length) {
                             this.parents = res;
-
                             this.loading = false;
                         } else {
                             this.parents = [];
@@ -319,6 +319,7 @@
                 this.person.personType = 1;
                 this.person.repliedAt = '';
                 this.person.extraPhone = '';
+                this.person.phone = this.phone;
                 parentStudentService.getByPerson(this.person.id).then(res => {
                     if(res['_embedded']){
                         this.students = res['_embedded']['parentStudentResourceList'];
