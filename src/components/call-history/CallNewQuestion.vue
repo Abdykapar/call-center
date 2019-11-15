@@ -122,7 +122,8 @@
                 this.$emit('check');
                 this.submitted = true;
                 this.$validator.validate().then(valid => {
-                    if (valid && this.person.phone) {
+                    console.log(valid);
+                    if (valid) {
                         this.questionary.repliedAt = this.person.repliedAt;
                         this.questionary.extraPhone = this.person.extraPhone;
                         this.questionary.personType = this.person.personType;

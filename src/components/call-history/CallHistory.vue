@@ -276,7 +276,6 @@
                     this.data = [];
                 }
                 if (e.length >= 4 && !isNaN(e)) {
-                    console.log(e);
                     personService.getByPhone(e).then(res => {
                         if (res) {
                             this.parents = res;
