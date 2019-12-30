@@ -53,7 +53,7 @@ export const router = new Router({
             path: '/report',
             component: Report,
             beforeEnter: (to, from, next) => {
-                $user.checkReport(next);
+                $user.checkOperator(next);
             },
         },
         // otherwise redirect to home
