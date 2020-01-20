@@ -72,7 +72,7 @@ const webpackConfig = merge(commonConfig, {
     externals: {
         // global app config object
         config: JSON.stringify({
-            apiUrl: 'http://localhost:5000/api/v1'
+            apiUrl: 'https://kundoluk.kg/api/v1'
         })
     }
 });
