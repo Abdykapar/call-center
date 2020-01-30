@@ -54,4 +54,7 @@ module.exports = {
     otherCategory: 'Другое',
     addCategory: 'Новый категория',
     login: 'Логин',
+    substitute_to_parent_login: 'Логин родителя для привязки студента',
+    substitute_from_parent_login: 'Логин родителя для отвязки студента',
+    parent_substitute: 'Связать аккаунт'
 };

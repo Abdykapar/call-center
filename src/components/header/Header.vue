@@ -78,6 +78,21 @@
           {{ $lang.words.incomingCall }}
         </router-link>
       </span>
+      <span :class="{'active': $route.path === '/parent-substitute'}">
+        <router-link :to="{name: 'ParentSubstitute'}">
+          <i
+                  v-if="$route.path === '/parent-substitute'"
+                  class="fa fa-exchange-alt"
+                  style="color: #ee7739"
+          />
+          <i
+                  v-else
+                  class="fa fa-exchange-alt"
+                  style="color: #eeeeee"
+          />
+          {{ $lang.words.parent_substitute }}
+        </router-link>
+      </span>
     </div>
   </div>
 </template>

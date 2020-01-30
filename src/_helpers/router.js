@@ -8,6 +8,7 @@ import CallHistory from '@/components/call-history/CallHistory';
 import CallHistoryOutgoing from '@/components/call-history/CallHistoryOutgoing';
 import CallDatabse from '@/components/call-database/CallDatabase';
 import Report from '@/components/report/Report';
+import ParentSubstitute from '@/components/parent-substitute/ParentSubstitute';
 
 Vue.use(Router);
 
@@ -52,6 +53,14 @@ export const router = new Router({
             name: 'Report',
             path: '/report',
             component: Report,
+            beforeEnter: (to, from, next) => {
+                $user.checkOperator(next);
+            },
+        },
+        {
+            name: 'ParentSubstitute',
+            path: '/parent-substitute',
+            component: ParentSubstitute,
             beforeEnter: (to, from, next) => {
                 $user.checkOperator(next);
             },

@@ -54,4 +54,7 @@ module.exports = {
     otherCategory: 'Other',
     addCategory: 'New category',
     login: 'Login',
+    substitute_to_parent_login: 'Login to the parent to bind the student',
+    substitute_from_parent_login: 'Parent login to unlink student',
+    parent_substitute: 'Parent substitute'
 };
