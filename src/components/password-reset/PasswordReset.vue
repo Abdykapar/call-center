@@ -2,6 +2,10 @@
     <div class="main">
         <form @submit.prevent="submit">
             <div class="form-group">
+                <label>{{ $lang.words.username }}</label>
+                <input type="text" class="form-control" :class="{'is-invalid' : errors.has('username')}" v-model="username" name="username" v-validate="'required'" :placeholder="$lang.words.username">
+            </div>
+            <div class="form-group">
                 <label>{{ $lang.words.newPassword }}</label>
                 <input type="password" class="form-control" :class="{'is-invalid' : errors.has('password')}" ref="password" v-model="newPassword" name="password" v-validate="'required'" :placeholder="$lang.words.newPassword">
             </div>
@@ -27,6 +31,7 @@
                 newPassword: '',
                 confirmPassword: '',
                 hasError: false,
+                username: ''
             }
         },
         computed: {
@@ -41,7 +46,7 @@
                     if(valid && !this.hasError) {
                         const data = {
                             password: this.newPassword,
-                            firebaseToken: this.user.firebaseToken
+                            username: this.username
                         };
                         userService.editProfile(data).then(() => {
                             this.$toaster.success(this.$lang.words.successMessage, { timeout: 2000 });

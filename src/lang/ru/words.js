@@ -61,4 +61,5 @@ module.exports = {
     newPassword: 'Новый пароль',
     confirmPassword: 'Подтвердите пароль',
     confirmPasswordError: 'Пароль не совпадает',
+    username: 'Имя пользователя',
 };

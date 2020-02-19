@@ -61,4 +61,5 @@ module.exports = {
     newPassword: 'Жаңы сыр сөздү',
     confirmPassword: 'Паролду тастыктоо',
     confirmPasswordError: 'Сыр сөз окшош болушу керек',
+    username: 'Колдонуучу аты',
 };
