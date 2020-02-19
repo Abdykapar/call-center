@@ -10,9 +10,9 @@ import Lang from 'vuejs-localization';
 
 import 'ant-design-vue/dist/antd.css';
 import '../node_modules/v-toaster/dist/v-toaster.css';
-import '../node_modules/vue-material/dist/vue-material.min.css';
+import 'vue-material/dist/vue-material.min.css'
+// import 'vue-material/dist/theme/default.css'
 
-import { MdDialog } from '../node_modules/vue-material/dist/components';
 
 import App from './App';
 
@@ -22,7 +22,6 @@ Vue.use(VeeValidate);
 Vue.use(Antd);
 Vue.use(Toaster);
 Vue.use(VueMaterial);
-Vue.use(MdDialog);
 Vue.use(Lang);
 
 new Vue({

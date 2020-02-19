@@ -93,16 +93,27 @@
           {{ $lang.words.parent_substitute }}
         </router-link>
       </span>
+      <span :class="{'active': $route.path === '/password-reset'}">
+        <button @click="showReset = true">{{ $lang.words.changePassword }}</button>
+      </span>
     </div>
+    <a-modal v-model="showReset" :title="$lang.words.changePassword" onOk="handleOk">
+      <template slot="footer">
+        <a-button key="back" @click="showReset = false">{{ $lang.words.close }}</a-button>
+      </template>
+      <password-reset @close="showReset = false"></password-reset>
+    </a-modal>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
 import { customEventEmitter } from '@/_helpers/customEventEmitter';
+import PasswordReset from '@/components/password-reset/PasswordReset';
 
 export default {
     name: 'Header',
+  components: { PasswordReset },
     data () {
         return {
             url: '',
@@ -123,6 +134,7 @@ export default {
                     code: 'en'
                 }
             ],
+            showReset: false
         };
     },
     created () {

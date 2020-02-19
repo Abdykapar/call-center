@@ -56,5 +56,9 @@ module.exports = {
     login: 'Логин',
     substitute_to_parent_login: 'Логин родителя для привязки студента',
     substitute_from_parent_login: 'Логин родителя для отвязки студента',
-    parent_substitute: 'Связать аккаунт'
+    parent_substitute: 'Связать аккаунт',
+    changePassword: 'Изменить пароль',
+    newPassword: 'Новый пароль',
+    confirmPassword: 'Подтвердите пароль',
+    confirmPasswordError: 'Пароль не совпадает',
 };

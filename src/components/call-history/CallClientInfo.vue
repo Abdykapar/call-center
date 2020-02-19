@@ -72,6 +72,9 @@ export default {
             fullName: '',
         };
     },
+    created () {
+      console.log(this.students);
+    }
 };
 </script>
 

@@ -9,6 +9,7 @@ import CallHistoryOutgoing from '@/components/call-history/CallHistoryOutgoing';
 import CallDatabse from '@/components/call-database/CallDatabase';
 import Report from '@/components/report/Report';
 import ParentSubstitute from '@/components/parent-substitute/ParentSubstitute';
+import PasswordReset from '@/components/password-reset/PasswordReset';
 
 Vue.use(Router);
 
@@ -61,6 +62,14 @@ export const router = new Router({
             name: 'ParentSubstitute',
             path: '/parent-substitute',
             component: ParentSubstitute,
+            beforeEnter: (to, from, next) => {
+                $user.checkOperator(next);
+            },
+        },
+        {
+            name: 'PasswordReset',
+            path: '/password-reset',
+            component: PasswordReset,
             beforeEnter: (to, from, next) => {
                 $user.checkOperator(next);
             },

@@ -56,5 +56,9 @@ module.exports = {
     login: 'Логин',
     substitute_to_parent_login: 'Байланыштыра турган ата-эненин логини',
     substitute_from_parent_login: 'Логин родителя для отвязки студента',
-    parent_substitute: 'Ата-энесин алмаштыруу'
+    parent_substitute: 'Ата-энесин алмаштыруу',
+    changePassword: 'Сыр сөздү өзгөртүү',
+    newPassword: 'Жаңы сыр сөздү',
+    confirmPassword: 'Паролду тастыктоо',
+    confirmPasswordError: 'Сыр сөз окшош болушу керек',
 };

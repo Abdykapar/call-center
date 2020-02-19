@@ -56,5 +56,9 @@ module.exports = {
     login: 'Login',
     substitute_to_parent_login: 'Login to the parent to bind the student',
     substitute_from_parent_login: 'Parent login to unlink student',
-    parent_substitute: 'Parent substitute'
+    parent_substitute: 'Parent substitute',
+    changePassword: 'Change password',
+    newPassword: 'New password',
+    confirmPassword: 'Confirm password',
+    confirmPasswordError: 'Password did not match',
 };
