@@ -1,17 +1,24 @@
 <template>
     <div class="main">
-        <form @submit.prevent="submit">
+        <form class="form-inline" @submit.prevent="searchUsername">
+            <input type="text" v-model="oldUsername" class="form-control mb-2 mr-sm-2" id="inlineFormInputName2" :placeholder="$lang.words.username">
+
+            <button type="submit" class="btn btn-primary mb-2">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+        <form @submit.prevent="submit" v-if="isUserFound">
             <div class="form-group">
                 <label>{{ $lang.words.username }}</label>
-                <input type="text" class="form-control" :class="{'is-invalid' : errors.has('username')}" v-model="username" name="username" v-validate="'required'" :placeholder="$lang.words.username">
+                <input readonly type="text" class="form-control" :class="{'is-invalid' : errors.has('username')}" v-model="username" name="username" v-validate="'required'" :placeholder="$lang.words.username">
             </div>
             <div class="form-group">
                 <label>{{ $lang.words.newPassword }}</label>
-                <input type="password" class="form-control" :class="{'is-invalid' : errors.has('password')}" ref="password" v-model="newPassword" name="password" v-validate="'required'" :placeholder="$lang.words.newPassword">
+                <input type="text" class="form-control" :class="{'is-invalid' : errors.has('password')}" ref="password" v-model="newPassword" name="password" v-validate="'required'" :placeholder="$lang.words.newPassword">
             </div>
             <div class="form-group">
                 <label>{{ $lang.words.confirmPassword }}</label>
-                <input v-validate="'required|confirmed:password'" :class="{'is-invalid' : errors.has('confirmPassword')}" class="form-control" v-model="confirmPassword" name="confirmPassword" type="password" :placeholder="$lang.words.confirmPassword">
+                <input v-validate="'required|confirmed:password'" :class="{'is-invalid' : errors.has('confirmPassword')}" class="form-control" v-model="confirmPassword" name="confirmPassword" type="text" :placeholder="$lang.words.confirmPassword">
                 <div class="invalid-feedback">
                     {{ $lang.words.confirmPasswordError }}
                 </div>
@@ -31,7 +38,9 @@
                 newPassword: '',
                 confirmPassword: '',
                 hasError: false,
-                username: ''
+                username: '',
+                oldUsername: '',
+                isUserFound: false
             }
         },
         computed: {
@@ -51,6 +60,11 @@
                         userService.editProfile(data).then(() => {
                             this.$toaster.success(this.$lang.words.successMessage, { timeout: 2000 });
                             this.$emit('close');
+                            this.isUserFound = false;
+                            this.oldUsername = '';
+                            this.username = '';
+                            this.newPassword = '';
+                            this.confirmPassword = '';
                         }).catch(err => console.log(err));
                     }
                 })
@@ -58,6 +72,18 @@
             checkEquality() {
                 this.hasError = this.newPassword !== this.confirmPassword;
             },
+            searchUsername() {
+                userService.getByUsername(this.oldUsername).then(res => {
+                    this.isUserFound = true;
+                    this.username = res.username;
+                    this.newPassword = res.username;
+                    this.confirmPassword = res.username;
+                }).catch(err => {
+                    this.$toaster.error(this.$lang.words.userNotFound, { timeout: 3000 });
+                    this.isUserFound = false;
+                    console.log(err)
+                });
+            }
         }
     }
 </script>

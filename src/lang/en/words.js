@@ -62,4 +62,5 @@ module.exports = {
     confirmPassword: 'Confirm password',
     confirmPasswordError: 'Password did not match',
     username: 'Username',
+    userNotFound: 'User not found'
 };

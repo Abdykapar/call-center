@@ -62,4 +62,5 @@ module.exports = {
     confirmPassword: 'Подтвердите пароль',
     confirmPasswordError: 'Пароль не совпадает',
     username: 'Имя пользователя',
+    userNotFound: 'Пользователь не найден'
 };
