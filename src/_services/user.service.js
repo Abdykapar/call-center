@@ -23,11 +23,7 @@ function login (username, password, remember) {
         .then(handleResponse)
             .then(user => {
             if (user.token) {
-                if(window.location.href === 'https://callcenter.kundoluk.kg/login'){
-                    window.location.href = '/';
-                } else if(window.location.href === 'https://report.kundoluk.kg/login') {
-                    window.location.href = '/report';
-                }
+                window.location.href = '/';
                 localStorage.setItem('user', JSON.stringify(user));
                 if(remember){
                     localStorage.setItem('username', username);
