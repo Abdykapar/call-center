@@ -22,17 +22,16 @@ function login (username, password, remember) {
     return fetch(`${config.apiUrl}/auth/login`, requestOptions)
         .then(handleResponse)
             .then(user => {
-            if (user.token) {
-                window.location.href = '/';
-                localStorage.setItem('user', JSON.stringify(user));
-                if(remember){
-                    localStorage.setItem('username', username);
-                    localStorage.setItem('password', password);
-                }else{
-                    localStorage.removeItem('username');
-                    localStorage.removeItem('password');
+                if (user.token) {
+                    localStorage.setItem('user', JSON.stringify(user));
+                    if(remember){
+                        localStorage.setItem('username', username);
+                        localStorage.setItem('password', password);
+                    }else{
+                        localStorage.removeItem('username');
+                        localStorage.removeItem('password');
+                    }
                 }
-            }
 
             return user;
         });

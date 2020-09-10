@@ -12,6 +12,7 @@ const actions = {
         userService.login(username, password, remember)
             .then(
                 user => {
+                    router.push('/')
                     commit('loginSuccess', user);
                 },
                 error => {
